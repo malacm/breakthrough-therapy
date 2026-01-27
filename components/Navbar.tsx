@@ -7,6 +7,7 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,7 +24,9 @@ export const Navbar: React.FC = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-6'
+        isHomePage
+          ? (scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-6')
+          : 'bg-white/90 backdrop-blur-md shadow-sm py-3'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +36,11 @@ export const Navbar: React.FC = () => {
             <div className="p-2 bg-autumn-100 rounded-full group-hover:bg-autumn-200 transition-colors">
                 <Flower2 className="h-6 w-6 text-autumn-700" />
             </div>
-            <span className={`font-serif text-2xl font-bold tracking-tight ${scrolled ? 'text-earth-800' : 'text-white'}`}>
+            <span className={`font-serif text-2xl font-bold tracking-tight ${
+              isHomePage 
+                ? (scrolled ? 'text-earth-800' : 'text-white')
+                : 'text-autumn-600'
+            }`}>
               Breakthrough
             </span>
           </NavLink>
@@ -46,9 +53,11 @@ export const Navbar: React.FC = () => {
                 to={item.path}
                 className={({ isActive }) =>
                   `text-sm font-medium tracking-wider transition-colors ${
-                    scrolled 
-                      ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`
-                      : `text-white hover:text-autumn-200 ${isActive ? 'font-semibold' : ''}`
+                    isHomePage
+                      ? scrolled 
+                        ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`
+                        : `text-white hover:text-autumn-200 ${isActive ? 'font-semibold' : ''}`
+                      : `hover:text-autumn-700 ${isActive ? 'text-autumn-600 font-semibold' : 'text-autumn-600'}`
                   }`
                 }
               >
@@ -66,7 +75,11 @@ export const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`${scrolled ? 'text-earth-600 hover:text-autumn-700' : 'text-white hover:text-autumn-200'} focus:outline-none`}
+              className={`${
+                isHomePage
+                  ? (scrolled ? 'text-earth-600 hover:text-autumn-700' : 'text-white hover:text-autumn-200')
+                  : 'text-autumn-600 hover:text-autumn-700'
+              } focus:outline-none`}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>

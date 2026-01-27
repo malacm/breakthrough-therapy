@@ -17,8 +17,10 @@ export const Home: React.FC = () => {
             alt="Calm nature scene" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-earth-900/30 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-earth-50 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-earth-900/20 mix-blend-multiply"></div>
+          {/* Orange gradient overlay for better text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-autumn-900/40 via-autumn-800/30 to-autumn-700/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-earth-50/20 via-transparent to-transparent"></div>
         </div>
 
         {/* Content */}
@@ -157,7 +159,7 @@ export const Home: React.FC = () => {
             <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to Begin Your Treatment?</h2>
             <p className="text-earth-300 text-base sm:text-lg mb-6 sm:mb-8">Book your appointment and experience the depth of traditional Chinese medicine.</p>
             <Link to="/contact" className="inline-block w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto bg-white text-earth-900 hover:bg-autumn-100 hover:text-earth-900 border-none shadow-none">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto bg-white text-autumn-600 hover:bg-autumn-600 hover:text-white border-none shadow-none transition-colors">
                     Book Your Appointment
                 </Button>
             </Link>
