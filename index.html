@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="BreakThrough Therapy offers Chinese Medicine and Bodywork in Los Angeles. Licensed Acupuncturist Ian Turley L.Ac provides acupuncture, herbal medicine, bodywork, moxibustion, and cupping." />
+    <meta name="keywords" content="acupuncture, Chinese medicine, herbal medicine, bodywork, moxibustion, cupping, Los Angeles, licensed acupuncturist, traditional Chinese medicine" />
+    <meta name="author" content="BreakThrough Therapy" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BreakThrough Therapy - Chinese Medicine and Bodywork" />
+    <meta property="og:description" content="A form of Chinese medicine that prioritizes depth, attention, and clinical impact. One person at a time, for the full duration of each treatment." />
+    <meta property="og:site_name" content="BreakThrough Therapy" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BreakThrough Therapy" />
+    <meta name="twitter:description" content="Chinese Medicine and Bodywork - Licensed Acupuncturist Ian Turley L.Ac" />
+    
+    <!-- Mobile Optimization -->
+    <meta name="theme-color" content="#3f6654" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    
+    <title>BreakThrough Therapy | Chinese Medicine and Bodywork | Los Angeles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              sage: {
+                50: '#f4f7f5',
+                100: '#e3ebe6',
+                200: '#c5d9ce',
+                300: '#9bbcac',
+                400: '#729c88',
+                500: '#52806b',
+                600: '#3f6654',
+                700: '#335244',
+                800: '#2b4238',
+                900: '#24372f',
+              },
+              stone: {
+                850: '#1f1e1c',
+              }
+            },
+            fontFamily: {
+              serif: ['"Cormorant Garamond"', 'serif'],
+              sans: ['"Montserrat"', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for a polished feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f4f7f5;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #9bbcac;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #729c88;
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Prevent horizontal scroll on mobile */
+      body {
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-sage-200 selection:text-sage-900">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
