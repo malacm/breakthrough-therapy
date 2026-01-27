@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
             <div className="p-2 bg-autumn-100 rounded-full group-hover:bg-autumn-200 transition-colors">
                 <Flower2 className="h-6 w-6 text-autumn-700" />
             </div>
-            <span className={`font-serif text-2xl font-bold tracking-tight ${scrolled ? 'text-earth-800' : 'text-earth-800'}`}>
+            <span className={`font-serif text-2xl font-bold tracking-tight ${scrolled ? 'text-earth-800' : 'text-white'}`}>
               Breakthrough
             </span>
           </NavLink>
@@ -45,8 +45,10 @@ export const Navbar: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `text-sm font-medium tracking-wider transition-colors hover:text-autumn-600 ${
-                    isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'
+                  `text-sm font-medium tracking-wider transition-colors ${
+                    scrolled 
+                      ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`
+                      : `text-white hover:text-autumn-200 ${isActive ? 'font-semibold' : ''}`
                   }`
                 }
               >
@@ -64,7 +66,7 @@ export const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-earth-600 hover:text-autumn-700 focus:outline-none"
+              className={`${scrolled ? 'text-earth-600 hover:text-autumn-700' : 'text-white hover:text-autumn-200'} focus:outline-none`}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
