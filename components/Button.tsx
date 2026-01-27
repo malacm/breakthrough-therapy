@@ -15,9 +15,9 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = "inline-flex items-center justify-center rounded-full transition-all duration-300 font-medium tracking-wide focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
-    primary: "bg-sage-600 text-white hover:bg-sage-700 shadow-lg hover:shadow-xl focus:ring-sage-500",
-    secondary: "bg-stone-200 text-stone-800 hover:bg-stone-300 shadow-sm focus:ring-stone-400",
-    outline: "border-2 border-sage-600 text-sage-700 hover:bg-sage-50 focus:ring-sage-500",
+    primary: "bg-autumn-600 text-white hover:bg-autumn-700 shadow-lg hover:shadow-xl focus:ring-autumn-500",
+    secondary: "bg-earth-200 text-earth-800 hover:bg-earth-300 shadow-sm focus:ring-earth-400",
+    outline: "border-2 border-autumn-600 text-autumn-700 hover:bg-autumn-50 focus:ring-autumn-500",
   };
 
   const sizes = {

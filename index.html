@@ -19,7 +19,7 @@
     <meta name="twitter:description" content="Chinese Medicine and Bodywork - Licensed Acupuncturist Ian Turley L.Ac" />
     
     <!-- Mobile Optimization -->
-    <meta name="theme-color" content="#3f6654" />
+    <meta name="theme-color" content="#f2850e" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     
@@ -33,17 +33,31 @@
         theme: {
           extend: {
             colors: {
-              sage: {
-                50: '#f4f7f5',
-                100: '#e3ebe6',
-                200: '#c5d9ce',
-                300: '#9bbcac',
-                400: '#729c88',
-                500: '#52806b',
-                600: '#3f6654',
-                700: '#335244',
-                800: '#2b4238',
-                900: '#24372f',
+              autumn: {
+                50: '#fef7ed',
+                100: '#fdedd3',
+                200: '#fbd9a5',
+                300: '#f8be6d',
+                400: '#f59e33',
+                500: '#f2850e',
+                600: '#e36a08',
+                700: '#bc4f0a',
+                800: '#953f10',
+                900: '#783510',
+                950: '#411807',
+              },
+              earth: {
+                50: '#faf8f5',
+                100: '#f4f0e8',
+                200: '#e8dfd0',
+                300: '#d9c8b2',
+                400: '#c7ab8f',
+                500: '#b8926f',
+                600: '#a67d5a',
+                700: '#8a664b',
+                800: '#725540',
+                900: '#5f4737',
+                950: '#32241c',
               },
               stone: {
                 850: '#1f1e1c',
@@ -63,14 +77,14 @@
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #f4f7f5;
+        background: #faf8f5;
       }
       ::-webkit-scrollbar-thumb {
-        background: #9bbcac;
+        background: #f8be6d;
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #729c88;
+        background: #f59e33;
       }
       
       /* Smooth scrolling */
@@ -84,7 +98,7 @@
       }
     </style>
   </head>
-  <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-sage-200 selection:text-sage-900">
+  <body class="bg-earth-50 text-earth-900 font-sans antialiased selection:bg-autumn-200 selection:text-autumn-900">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 
 export const About: React.FC = () => {
   return (
-    <div className="pt-24 min-h-screen bg-stone-50">
+    <div className="pt-24 min-h-screen bg-earth-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-stone-800 mb-4 sm:mb-6">The Practitioner</h1>
-          <p className="text-base sm:text-lg md:text-xl text-stone-600 font-light max-w-2xl mx-auto px-4">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Practitioner</h1>
+          <p className="text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
             Ian Turley L.Ac — Licensed Acupuncturist
           </p>
         </div>
@@ -25,14 +25,14 @@ export const About: React.FC = () => {
                         className="w-full h-full object-cover"
                     />
                 </div>
-                <div className="absolute -bottom-8 -right-8 bg-sage-100 p-8 rounded-full hidden lg:block z-[-1] w-48 h-48"></div>
+                <div className="absolute -bottom-8 -right-8 bg-autumn-100 p-8 rounded-full hidden lg:block z-[-1] w-48 h-48"></div>
             </div>
             
             <div className="md:col-span-7 space-y-4 sm:space-y-6">
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-800">Ian Turley L.Ac</h2>
-                <h3 className="text-sage-700 font-medium tracking-wide uppercase text-xs sm:text-sm">Licensed Acupuncturist</h3>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-earth-800">Ian Turley L.Ac</h2>
+                <h3 className="text-autumn-700 font-medium tracking-wide uppercase text-xs sm:text-sm">Licensed Acupuncturist</h3>
                 
-                <div className="text-stone-600 space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base">
+                <div className="text-earth-600 space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base">
                     <p>
                         My journey into medicine began well before I ever took my first class. As a child I marveled at every life-form I came across. I threw dead bugs into anthills, collected fireflies and ladybugs, and lifted river rocks in search of iridescent salamanders and newts. This fundamental curiosity about biology stuck with me and inevitably drove me to study the human body; but before that, I had to cut my teeth in the working world.
                     </p>
