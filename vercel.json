@@ -5,9 +5,9 @@
   "installCommand": "npm install",
   "framework": "vite",
   "functions": {
-    "api/**/*.ts": {
-      "memory": 256,
-      "maxDuration": 30
+    "api/calendly-webhook.ts": {
+      "maxDuration": 30,
+      "includeFiles": "lib/**"
     }
   },
   "rewrites": [
