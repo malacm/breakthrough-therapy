@@ -1,62 +1,60 @@
 import { NavItem, Service, Testimonial } from './types';
-import { Leaf, Heart, Activity, Sparkles, Droplets, Flame } from 'lucide-react';
+import { Leaf, Heart, Activity, Sparkles, Droplets, Flame, Hand } from 'lucide-react';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Services', path: '/services' },
-  { label: 'Contact', path: '/contact' },
 ];
 
 export const SERVICES: Service[] = [
   {
     id: '1',
-    title: 'Acupuncture',
-    description: 'The practice of inserting and manipulating needles in the body to influence the volume and flow of qi and blood. For those who are more western-minded: the practice of inserting and manipulating needles in the body to stimulate tissues (skin, fascia, muscles, tendons, bones, ligaments, nerves, blood vessels, lymph etc.) at varying locations and depths.',
-    icon: 'Activity',
-    price: 'First Visit: $150 (100 min) | Follow-Up: $160 (60 min)'
+    title: 'First Visit',
+    description: 'This is the recommended first step to beginning your journey with BreakThrough. We\'ll spend 40-60 minutes doing a full patient intake and medical history to establish your health goals, current needs and any sensitivities or medication interactions that could interfere with providing you optimal care. We\'ll spend the remaining 40-60 minutes on a treatment that is carefully crafted for your needs on that day.',
+    icon: 'Heart',
+    price: '100 minutes — $150',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/first-visit-100-minutes-150'
   },
   {
     id: '2',
-    title: 'Herbal Medicine',
-    description: 'The practice of measuring and combining herbs to treat both acute and chronic health problems either in tandem or succession. Herbs are your everyday take-home treatment off the table and are discussed as they\'re taken to ensure success and efficacy.',
-    icon: 'Leaf',
-    price: 'Custom formulas tailored to individual needs'
+    title: 'Follow-Up Acupuncture',
+    description: 'For patients who have already had their First Visit appointment — 10-15 minutes will be spent checking in and reassessing your needs, the remaining 45-50 minutes will be spent receiving acupuncture.',
+    icon: 'Activity',
+    price: '60 minutes — $160',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/follow-up-acupuncture-60-minutes-160'
   },
   {
     id: '3',
-    title: 'Bodywork',
-    description: 'The practice of manually manipulating the tissues of the body from the exterior by use of hands, knuckles, forearms, elbows, and tools.',
-    icon: 'Heart',
-    price: 'Chinese Medical Massage: $250 (60 min) | $350 (90 min)'
+    title: 'Chinese Medical Massage',
+    description: '60 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
+    icon: 'Hand',
+    price: '60 minutes — $250',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/chinese-medical-massage-60-minutes-250'
   },
   {
     id: '4',
-    title: 'Moxibustion',
-    description: 'The practice of burning Ai Ye, or mugwort as it\'s known to western herbalists, and passing or holding it over acupuncture channels and points in order to warm, move qi and alleviate pain.',
-    icon: 'Flame',
-    price: 'Included in treatment sessions'
+    title: 'Chinese Medical Massage',
+    description: '90 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
+    icon: 'Hand',
+    price: '90 minutes — $350',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/chinese-medical-massage-90-minutes-350'
   },
   {
     id: '5',
-    title: 'Cupping',
-    description: 'The practice of using glass, ceramic or silicone cups to suction and lift skin and fascia to unblock and move stuck qi and blood.',
-    icon: 'Droplets',
-    price: 'Included in treatment sessions'
+    title: 'Acupuncture & Massage',
+    description: 'For patients who have had their First Visit — 40 minutes of acupuncture followed or preceded by 20 minutes of bodywork using manual techniques and tools.',
+    icon: 'Sparkles',
+    price: '60 minutes — $220',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/acupuncture-massage-60-minutes-220'
   },
   {
     id: '6',
-    title: 'Acupuncture & Massage',
-    description: 'A combined treatment session integrating both acupuncture and bodywork techniques for comprehensive healing.',
-    icon: 'Sparkles',
-    price: '$220 (60 min)'
-  },
-  {
-    id: '7',
     title: 'Telehealth',
-    description: 'Remote consultation and guidance for ongoing care and herbal medicine discussions.',
+    description: 'A 30 minute phone or zoom call designed to provide you with nutrition and lifestyle advice catered either to an acute health challenge (like a cold, flu, infection, fungus, etc.) or a chronic health condition (like diabetes, arthritis, IBS, eczema and many others). The information gathered on this call will be used for future treatments and combined with a First Visit intake will serve as the basis for writing your custom herbal formula.',
     icon: 'Activity',
-    price: '$50 (30 min)'
+    price: '30 minutes — $50',
+    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/telehealth-30-minutes-50'
   }
 ];
 

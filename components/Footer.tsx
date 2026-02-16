@@ -30,7 +30,6 @@ export const Footer: React.FC = () => {
               <li><NavLink to="/" className="text-earth-600 hover:text-autumn-700 text-sm">Home</NavLink></li>
               <li><NavLink to="/about" className="text-earth-600 hover:text-autumn-700 text-sm">About Me</NavLink></li>
               <li><NavLink to="/services" className="text-earth-600 hover:text-autumn-700 text-sm">Services</NavLink></li>
-              <li><NavLink to="/contact" className="text-earth-600 hover:text-autumn-700 text-sm">Book Online</NavLink></li>
             </ul>
           </div>
 

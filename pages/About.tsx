@@ -47,11 +47,6 @@ export const About: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="pt-8">
-                    <Link to="/contact">
-                        <Button>Book with Ian</Button>
-                    </Link>
-                </div>
             </div>
         </div>
 

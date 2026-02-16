@@ -64,11 +64,6 @@ export const Navbar: React.FC = () => {
                 {item.label}
               </NavLink>
             ))}
-            <NavLink to="/contact">
-                <button className="bg-autumn-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-autumn-700 transition-colors shadow-md hover:shadow-lg">
-                Book Now
-                </button>
-            </NavLink>
           </div>
 
           {/* Mobile Menu Button */}
@@ -107,11 +102,6 @@ export const Navbar: React.FC = () => {
               {item.label}
             </NavLink>
           ))}
-          <NavLink to="/contact" className="w-full max-w-xs">
-             <button className="w-full bg-autumn-600 text-white px-5 py-3 rounded-full text-base font-medium">
-                 Book Consultation
-             </button>
-          </NavLink>
         </div>
       </div>
     </nav>

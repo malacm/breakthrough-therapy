@@ -35,12 +35,12 @@ export const Home: React.FC = () => {
             A form of Chinese medicine that prioritizes depth, attention, and clinical impact. One person at a time, for the full duration of each treatment.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Link to="/contact" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto">Start Your Journey</Button>
-            </Link>
             <Link to="/services" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto">View Services</Button>
+            </Link>
+            <Link to="/about" className="w-full sm:w-auto">
               <Button variant="secondary" size="lg" className="w-full sm:w-auto bg-white/90 text-earth-800 hover:bg-white">
-                View Services
+                Learn More
               </Button>
             </Link>
           </div>
@@ -157,12 +157,7 @@ export const Home: React.FC = () => {
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to Begin Your Treatment?</h2>
-            <p className="text-earth-300 text-base sm:text-lg mb-6 sm:mb-8">Book your appointment and experience the depth of traditional Chinese medicine.</p>
-            <Link to="/contact" className="inline-block w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto bg-white text-autumn-600 hover:bg-autumn-600 hover:text-white border-none shadow-none transition-colors">
-                    Book Your Appointment
-                </Button>
-            </Link>
+            <p className="text-earth-300 text-base sm:text-lg mb-6 sm:mb-8">Experience the depth of traditional Chinese medicine.</p>
         </div>
       </section>
     </div>

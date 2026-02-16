@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SERVICES } from '../constants';
-import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
+import { BookingModal } from '../components/BookingModal';
 import * as Icons from 'lucide-react';
-import { Check } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 export const Services: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedServiceUrl, setSelectedServiceUrl] = useState<string | undefined>(undefined);
+  const [selectedServiceTitle, setSelectedServiceTitle] = useState<string | undefined>(undefined);
+
+  const openBookingModal = (serviceUrl?: string, serviceTitle?: string) => {
+    // Use the service-specific URL, or fall back to default if not provided
+    const urlToUse = serviceUrl || import.meta.env.VITE_CALENDLY_URL || 'https://calendly.com/breakthroughtherapyacu';
+    setSelectedServiceUrl(urlToUse);
+    setSelectedServiceTitle(serviceTitle);
+    setIsModalOpen(true);
+  };
+
+  const closeBookingModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="pt-24 min-h-screen bg-earth-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,9 +51,14 @@ export const Services: React.FC = () => {
                         {service.description}
                     </p>
                     <div>
-                        <Link to="/contact">
-                            <Button variant="outline" size="sm" className="w-full sm:w-auto">Book This Service</Button>
-                        </Link>
+                      <Button 
+                        variant="primary" 
+                        size="md" 
+                        onClick={() => openBookingModal(service.calendlyUrl, service.title)}
+                      >
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Book Now
+                      </Button>
                     </div>
                  </div>
                </div>
@@ -50,15 +71,23 @@ export const Services: React.FC = () => {
             <h3 className="font-serif text-lg sm:text-xl font-bold text-earth-800 mb-2 sm:mb-3">The Pricing</h3>
             <div className="text-earth-600 max-w-2xl mx-auto text-sm sm:text-base px-4 space-y-2">
                 <p>First Visit (100 minutes) — $150</p>
-                <p>Chinese Medical Massage (90 minutes) — $350</p>
                 <p>Follow-Up Acupuncture (60 minutes) — $160</p>
-                <p>Acupuncture & Massage (60 minutes) — $220</p>
                 <p>Chinese Medical Massage (60 minutes) — $250</p>
+                <p>Chinese Medical Massage (90 minutes) — $350</p>
+                <p>Acupuncture & Massage (60 minutes) — $220</p>
                 <p>Telehealth (30 minutes) — $50</p>
                 <p className="mt-4 text-xs italic">All services are currently priced for mobile services — pricing will be updated when office visits are available.</p>
             </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={closeBookingModal}
+        calendlyUrl={selectedServiceUrl}
+        serviceTitle={selectedServiceTitle}
+      />
     </div>
   );
 };
