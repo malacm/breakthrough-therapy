@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { waitUntil } from '@vercel/functions';
 import crypto from 'crypto';
 import { google } from 'googleapis';
 import * as Brevo from '@getbrevo/brevo';
@@ -412,32 +413,13 @@ async function extractBookingData(webhookPayload: CalendlyWebhookPayload): Promi
 
 // ─── Main handler ────────────────────────────────────────────────────────────
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+/**
+ * Process the booking in the background: create Google Docs + send email.
+ * This runs AFTER we've already returned 200 to Calendly, preventing retries.
+ */
+async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<void> {
   try {
-    const rawBody = JSON.stringify(req.body);
-    const signature = (req.headers['calendly-webhook-signature'] as string) || '';
-    if (WEBHOOK_SIGNING_KEY && !verifyWebhookSignature(rawBody, signature)) {
-      console.error('Invalid webhook signature');
-      return res.status(401).json({ error: 'Invalid signature' });
-    }
-
-    const webhookPayload = req.body;
-    console.log('Received webhook event:', webhookPayload.event);
-    console.log('Payload keys:', Object.keys(webhookPayload.payload || {}));
-    console.log('Invitee name:', webhookPayload.payload?.name);
-    console.log('Invitee email:', webhookPayload.payload?.email);
-    console.log('Event URI:', webhookPayload.payload?.event);
-
-    if (webhookPayload.event !== 'invitee.created') {
-      console.log(`Ignoring event type: ${webhookPayload.event}`);
-      return res.status(200).json({ message: 'Event ignored', event: webhookPayload.event });
-    }
-
-    const booking = await extractBookingData(webhookPayload as CalendlyWebhookPayload);
+    const booking = await extractBookingData(webhookPayload);
     console.log(`Processing booking for ${booking.clientName} (${booking.clientEmail})`);
 
     const eventDateFormatted = new Date(booking.eventDate).toLocaleDateString('en-US', {
@@ -454,22 +436,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log('Sending confirmation email...');
     await sendBookingConfirmationEmail(booking, docs);
-    console.log('Confirmation email sent successfully');
-
-    return res.status(200).json({
-      message: 'Booking processed successfully',
-      bookingId: booking.id,
-      documents: {
-        consent: docs.consent.docUrl,
-        arbitration: docs.arbitration.docUrl,
-        intake: docs.intake.docUrl,
-      },
-    });
+    console.log('Confirmation email sent successfully to', booking.clientEmail);
   } catch (error: any) {
-    console.error('Error processing Calendly webhook:', error);
+    console.error('Error processing booking in background:', error.message || error);
+  }
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const rawBody = JSON.stringify(req.body);
+    const signature = (req.headers['calendly-webhook-signature'] as string) || '';
+    if (WEBHOOK_SIGNING_KEY && !verifyWebhookSignature(rawBody, signature)) {
+      console.error('Invalid webhook signature');
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    const webhookPayload = req.body;
+
+    if (webhookPayload.event !== 'invitee.created') {
+      console.log(`Ignoring event type: ${webhookPayload.event}`);
+      return res.status(200).json({ message: 'Event ignored', event: webhookPayload.event });
+    }
+
+    console.log('Received invitee.created for:', webhookPayload.payload?.name, webhookPayload.payload?.email);
+
+    // Return 200 IMMEDIATELY so Calendly does not retry.
+    // The actual processing (Google Docs + email) continues in the background.
+    waitUntil(processBooking(webhookPayload as CalendlyWebhookPayload));
+
+    return res.status(200).json({ message: 'Booking received, processing in background' });
+  } catch (error: any) {
+    console.error('Error in webhook handler:', error);
     return res.status(500).json({
       error: 'Internal server error',
-      message: error.message || 'An unexpected error occurred while processing the booking',
+      message: error.message || 'An unexpected error occurred',
     });
   }
 }
