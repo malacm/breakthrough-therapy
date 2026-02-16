@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
 import type { Booking, CalendlyWebhookPayload } from '../types';
-import { createBookingDocs } from './services/google-drive';
-import { sendBookingConfirmationEmail } from './services/brevo';
+import { createBookingDocs } from '../lib/google-drive';
+import { sendBookingConfirmationEmail } from '../lib/brevo';
 
 const WEBHOOK_SIGNING_KEY = process.env.CALENDLY_WEBHOOK_SIGNING_KEY || '';
 

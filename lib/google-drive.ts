@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import type { GoogleDocResult, BookingDocs } from '../../types';
+import type { GoogleDocResult, BookingDocs } from '../types';
 
 // Template Google Doc IDs — these are the master documents in your Drive
 // that get copied per-booking. Set these in your environment variables.
@@ -161,3 +161,4 @@ export async function createBookingDocs(
 
   return results as unknown as BookingDocs;
 }
+

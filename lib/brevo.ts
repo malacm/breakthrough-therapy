@@ -1,5 +1,5 @@
 import * as Brevo from '@getbrevo/brevo';
-import type { Booking, BookingDocs } from '../../types';
+import type { Booking, BookingDocs } from '../types';
 
 // Initialize Brevo transactional email API
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
@@ -283,3 +283,4 @@ export async function sendBookingConfirmationEmail(
 
   await apiInstance.sendTransacEmail(sendSmtpEmail);
 }
+
