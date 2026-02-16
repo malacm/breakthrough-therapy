@@ -31,27 +31,28 @@ interface BookingDocs {
   intake: GoogleDocResult;
 }
 
+// Calendly v2 webhook payload — the invitee data is flat in `payload`
+// and `payload.event` is a URI string (not an object).
 interface CalendlyWebhookPayload {
-  event: string;
+  event: string; // e.g. "invitee.created"
+  created_at: string;
+  created_by: string;
   payload: {
-    event_type: { uuid: string; name: string; slug: string };
-    event: {
-      uuid: string;
-      start_time: string;
-      end_time: string;
-      name: string;
-      location?: { type: string; location?: string };
-    };
-    invitee: {
-      uuid: string;
-      email: string;
-      name: string;
-      timezone: string;
-      created_at: string;
-      uri: string;
-    };
+    cancel_url: string;
+    created_at: string;
+    email: string;
+    event: string; // URI like "https://api.calendly.com/scheduled_events/UUID"
+    name: string;
+    new_invitee?: string | null;
+    old_invitee?: string | null;
     questions_and_answers?: Array<{ question: string; answer: string }>;
+    reschedule_url: string;
+    rescheduled: boolean;
+    status: string;
+    timezone: string;
     tracking?: { utm_source?: string; utm_medium?: string; utm_campaign?: string };
+    updated_at: string;
+    uri: string; // invitee URI
   };
 }
 
@@ -342,19 +343,70 @@ function verifyWebhookSignature(payload: string, signature: string): boolean {
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
 }
 
-function extractBookingData(webhookPayload: CalendlyWebhookPayload): Booking {
-  const { event, invitee, event_type } = webhookPayload.payload;
+const CALENDLY_TOKEN = process.env.PERSONAL_ACCESS_TOKEN || '';
+
+/**
+ * Fetches the scheduled event details from the Calendly API so we can get
+ * the event name (service type) and start/end times.
+ */
+async function fetchCalendlyEvent(eventUri: string): Promise<{
+  name: string;
+  start_time: string;
+  end_time: string;
+  event_type_name: string;
+}> {
+  // eventUri looks like "https://api.calendly.com/scheduled_events/UUID"
+  const res = await fetch(eventUri, {
+    headers: { Authorization: `Bearer ${CALENDLY_TOKEN}` },
+  });
+  if (!res.ok) {
+    console.error('Failed to fetch Calendly event:', res.status, await res.text());
+    return { name: 'Appointment', start_time: new Date().toISOString(), end_time: new Date().toISOString(), event_type_name: 'Appointment' };
+  }
+  const data = await res.json();
+  const resource = data.resource;
+
+  // Fetch the event type name
+  let eventTypeName = resource.name || 'Appointment';
+  if (resource.event_type) {
+    try {
+      const etRes = await fetch(resource.event_type, {
+        headers: { Authorization: `Bearer ${CALENDLY_TOKEN}` },
+      });
+      if (etRes.ok) {
+        const etData = await etRes.json();
+        eventTypeName = etData.resource?.name || eventTypeName;
+      }
+    } catch (e) {
+      console.warn('Could not fetch event type name, using fallback');
+    }
+  }
+
   return {
-    id: event.uuid,
-    clientName: invitee.name,
-    clientEmail: invitee.email,
-    eventType: event_type.name,
-    eventDate: event.start_time,
-    eventTime: event.start_time,
-    timezone: invitee.timezone,
-    calendlyEventUri: event.uuid,
-    calendlyInviteeUri: invitee.uri,
-    createdAt: invitee.created_at,
+    name: resource.name || 'Appointment',
+    start_time: resource.start_time || new Date().toISOString(),
+    end_time: resource.end_time || new Date().toISOString(),
+    event_type_name: eventTypeName,
+  };
+}
+
+async function extractBookingData(webhookPayload: CalendlyWebhookPayload): Promise<Booking> {
+  const { payload } = webhookPayload;
+
+  // payload.event is a URI string — fetch the event details
+  const eventDetails = await fetchCalendlyEvent(payload.event);
+
+  return {
+    id: payload.uri.split('/').pop() || 'unknown',
+    clientName: payload.name,
+    clientEmail: payload.email,
+    eventType: eventDetails.event_type_name,
+    eventDate: eventDetails.start_time,
+    eventTime: eventDetails.start_time,
+    timezone: payload.timezone,
+    calendlyEventUri: payload.event,
+    calendlyInviteeUri: payload.uri,
+    createdAt: payload.created_at,
   };
 }
 
@@ -373,14 +425,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
-    const webhookPayload: CalendlyWebhookPayload = req.body;
+    const webhookPayload = req.body;
+    console.log('Received webhook event:', webhookPayload.event);
+    console.log('Payload keys:', Object.keys(webhookPayload.payload || {}));
+    console.log('Invitee name:', webhookPayload.payload?.name);
+    console.log('Invitee email:', webhookPayload.payload?.email);
+    console.log('Event URI:', webhookPayload.payload?.event);
 
     if (webhookPayload.event !== 'invitee.created') {
       console.log(`Ignoring event type: ${webhookPayload.event}`);
       return res.status(200).json({ message: 'Event ignored', event: webhookPayload.event });
     }
 
-    const booking = extractBookingData(webhookPayload);
+    const booking = await extractBookingData(webhookPayload as CalendlyWebhookPayload);
     console.log(`Processing booking for ${booking.clientName} (${booking.clientEmail})`);
 
     const eventDateFormatted = new Date(booking.eventDate).toLocaleDateString('en-US', {
