@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { SERVICES } from '../constants';
+import { SERVICES, SERVICE_ICON_MAP } from '../constants';
 import { Button } from '../components/Button';
 import { BookingModal } from '../components/BookingModal';
-import * as Icons from 'lucide-react';
-import { Calendar } from 'lucide-react';
+import { CalendarIcon, HeartIcon } from '@heroicons/react/24/outline';
 
 export const Services: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +33,7 @@ export const Services: React.FC = () => {
 
         <div className="space-y-8 sm:space-y-10 md:space-y-12">
           {SERVICES.map((service, index) => {
-             const IconComponent = (Icons as any)[service.icon] || Icons.HelpCircle;
+             const IconComponent = SERVICE_ICON_MAP[service.icon] || HeartIcon;
              const isEven = index % 2 === 0;
 
              return (
@@ -56,7 +55,7 @@ export const Services: React.FC = () => {
                         size="md" 
                         onClick={() => openBookingModal(service.calendlyUrl, service.title)}
                       >
-                        <Calendar className="h-4 w-4 mr-2" />
+                        <CalendarIcon className="h-4 w-4 mr-2" />
                         Book Now
                       </Button>
                     </div>

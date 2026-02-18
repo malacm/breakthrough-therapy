@@ -1,5 +1,28 @@
 import { NavItem, Service, Testimonial } from './types';
-import { Leaf, Heart, Activity, Sparkles, Droplets, Flame, Hand } from 'lucide-react';
+import {
+  HeartIcon,
+  HandRaisedIcon,
+  SparklesIcon,
+  PhoneIcon,
+} from '@heroicons/react/24/outline';
+
+import React from 'react';
+
+// Activity/pulse icon (not available in Heroicons)
+const ActivityIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l3-9 4 18 3-9h4" />
+  </svg>
+);
+
+// Icon map for dynamic lookup by service icon string
+export const SERVICE_ICON_MAP: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  Heart: HeartIcon,
+  Activity: ActivityIcon,
+  Hand: HandRaisedIcon,
+  Sparkles: SparklesIcon,
+  Phone: PhoneIcon,
+};
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
@@ -52,7 +75,7 @@ export const SERVICES: Service[] = [
     id: '6',
     title: 'Telehealth',
     description: 'A 30 minute phone or zoom call designed to provide you with nutrition and lifestyle advice catered either to an acute health challenge (like a cold, flu, infection, fungus, etc.) or a chronic health condition (like diabetes, arthritis, IBS, eczema and many others). The information gathered on this call will be used for future treatments and combined with a First Visit intake will serve as the basis for writing your custom herbal formula.',
-    icon: 'Activity',
+    icon: 'Phone',
     price: '30 minutes — $50',
     calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/telehealth-30-minutes-50'
   }

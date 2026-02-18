@@ -20,8 +20,8 @@ export const About: React.FC = () => {
             <div className="md:col-span-5 relative">
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
                     <img 
-                        src="https://picsum.photos/800/1200?random=5" 
-                        alt="Therapist profile" 
+                        src="/images/tempheadshot.jpg" 
+                        alt="Ian Turley L.Ac - Licensed Acupuncturist" 
                         className="w-full h-full object-cover"
                     />
                 </div>

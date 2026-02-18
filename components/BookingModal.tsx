@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { CalendlyWidget } from './CalendlyWidget';
 
 interface BookingModalProps {
@@ -70,7 +70,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             className="p-2 hover:bg-earth-100 rounded-full transition-colors text-earth-600 hover:text-earth-800"
             aria-label="Close modal"
           >
-            <X className="h-5 w-5 sm:h-6 sm:w-6" />
+            <XMarkIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
         </div>
 
@@ -82,4 +82,3 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     </div>
   );
 };
-

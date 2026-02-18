@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '../constants';
-import { Menu, X, Flower2 } from 'lucide-react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Flower2 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,7 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-2 group">
-            <div className="p-2 bg-autumn-100 rounded-full group-hover:bg-autumn-200 transition-colors">
+            <div className="p-2 bg-autumn-100 rounded-full group-hover:bg-autumn-200 transition-colors flex items-center justify-center">
                 <Flower2 className="h-6 w-6 text-autumn-700" />
             </div>
             <span className={`font-serif text-2xl font-bold tracking-tight ${
@@ -76,7 +77,7 @@ export const Navbar: React.FC = () => {
                   : 'text-autumn-600 hover:text-autumn-700'
               } focus:outline-none`}
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
             </button>
           </div>
         </div>

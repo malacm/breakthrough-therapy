@@ -1,9 +1,19 @@
 import React from 'react';
 import { Button } from '../components/Button';
-import { SERVICES, TESTIMONIALS } from '../constants';
-import { ArrowRight, Star, HeartHandshake, Leaf, ShieldCheck } from 'lucide-react';
-import * as Icons from 'lucide-react';
+import { SERVICES, TESTIMONIALS, SERVICE_ICON_MAP } from '../constants';
+import { ArrowRightIcon, StarIcon, HeartIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
+import { getHeroImageUrl, getApproachImageUrl } from '../lib/seasonImages';
+
+// Leaf icon (not available in Heroicons)
+const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4-8-7.5-8-12a8 8 0 0116 0c0 4.5-4 8-8 12z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21V10" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8 14c2-1.5 4-3 4-4" />
+  </svg>
+);
 
 export const Home: React.FC = () => {
   return (
@@ -13,7 +23,7 @@ export const Home: React.FC = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://picsum.photos/1920/1080?grayscale&blur=2" 
+            src={getHeroImageUrl()} 
             alt="Calm nature scene" 
             className="w-full h-full object-cover"
           />
@@ -32,7 +42,7 @@ export const Home: React.FC = () => {
             BreakThrough Therapy
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-earth-100 mb-8 sm:mb-10 max-w-2xl mx-auto font-light leading-relaxed px-2">
-            A form of Chinese medicine that prioritizes depth, attention, and clinical impact. One person at a time, for the full duration of each treatment.
+            A form of Chinese medicine that prioritizes depth, attention, and clinical impact. The goal is not temporary relief, but clear, noticeable change that holds over time.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link to="/services" className="w-full sm:w-auto">
@@ -54,12 +64,12 @@ export const Home: React.FC = () => {
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-16 h-16 sm:w-24 sm:h-24 bg-autumn-200 rounded-full -z-10 opacity-50"></div>
               <img 
-                src="https://picsum.photos/600/800?random=2" 
+                src={getApproachImageUrl()} 
                 alt="Therapist portrait" 
                 className="rounded-2xl shadow-xl w-full h-[400px] sm:h-[500px] object-cover grayscale hover:grayscale-0 transition-all duration-700"
               />
               <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-earth-100 max-w-[85%] sm:max-w-xs">
-                <p className="font-serif italic text-earth-600 text-sm sm:text-base md:text-lg">"Healing happens when we feel safe enough to feel."</p>
+                <p className="font-serif italic text-earth-600 text-sm sm:text-base md:text-lg">"The goal is not temporary relief, but clear, noticeable change that holds over time"</p>
               </div>
             </div>
             <div>
@@ -80,9 +90,9 @@ export const Home: React.FC = () => {
               
               <div className="grid grid-cols-1 gap-6 mb-8">
                 {[
-                  { icon: HeartHandshake, text: "One-on-one attention for the full treatment" },
-                  { icon: Leaf, text: "Custom herbal formulas tailored to you" },
-                  { icon: ShieldCheck, text: "Traditional Chinese medicine diagnostic frameworks" }
+                  { icon: HeartIcon, text: "One-on-one attention for the full treatment" },
+                  { icon: LeafIcon, text: "Custom herbal formulas tailored to you" },
+                  { icon: ShieldCheckIcon, text: "Traditional Chinese medicine diagnostic frameworks" }
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-4">
                     <div className="bg-autumn-100 p-2 rounded-full">
@@ -107,8 +117,7 @@ export const Home: React.FC = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {SERVICES.map((service) => {
-              // Dynamically get icon component
-              const IconComponent = (Icons as any)[service.icon] || Icons.HelpCircle;
+              const IconComponent = SERVICE_ICON_MAP[service.icon] || HeartIcon;
               
               return (
                 <div key={service.id} className="group bg-earth-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 border border-earth-100 hover:border-autumn-200">
@@ -118,7 +127,7 @@ export const Home: React.FC = () => {
                   <h3 className="font-serif text-xl font-bold text-earth-800 mb-3">{service.title}</h3>
                   <p className="text-earth-600 text-sm leading-relaxed mb-6">{service.description}</p>
                   <Link to="/services" className="inline-flex items-center text-autumn-700 text-sm font-semibold group-hover:gap-2 transition-all">
-                    Learn more <ArrowRight className="h-4 w-4 ml-1" />
+                    Learn more <ArrowRightIcon className="h-4 w-4 ml-1" />
                   </Link>
                 </div>
               );
@@ -136,7 +145,7 @@ export const Home: React.FC = () => {
                     <div key={t.id} className="bg-white p-8 rounded-xl shadow-sm relative">
                         <div className="flex justify-center mb-4">
                             {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 text-amber-400 fill-current" />
+                                <StarSolidIcon key={i} className="h-4 w-4 text-amber-400" />
                             ))}
                         </div>
                         <p className="text-earth-600 italic mb-6">"{t.text}"</p>
@@ -157,7 +166,7 @@ export const Home: React.FC = () => {
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
             <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to Begin Your Treatment?</h2>
-            <p className="text-earth-300 text-base sm:text-lg mb-6 sm:mb-8">Experience the depth of traditional Chinese medicine.</p>
+            <p className="text-earth-300 text-base sm:text-lg mb-6 sm:mb-8"></p>
         </div>
       </section>
     </div>

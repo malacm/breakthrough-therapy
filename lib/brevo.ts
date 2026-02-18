@@ -284,3 +284,5 @@ export async function sendBookingConfirmationEmail(
   await apiInstance.sendTransacEmail(sendSmtpEmail);
 }
 
+
+
