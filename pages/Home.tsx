@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../components/Button';
-import { SERVICES, TESTIMONIALS, SERVICE_ICON_MAP } from '../constants';
-import { ArrowRightIcon, StarIcon, HeartIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { TESTIMONIALS, SERVICE_ICON_MAP } from '../constants';
+import { ArrowRightIcon, StarIcon, HeartIcon, ShieldCheckIcon, HandRaisedIcon, FireIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import { getHeroImageUrl, getApproachImageUrl } from '../lib/seasonImages';
@@ -14,6 +14,55 @@ const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M8 14c2-1.5 4-3 4-4" />
   </svg>
 );
+
+// Needle/Acupuncture icon
+const NeedleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l3-9 4 18 3-9h4" />
+  </svg>
+);
+
+// Cupping icon
+const CuppingIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a7 7 0 0 1 7 7v2a7 7 0 0 1-14 0v-2a7 7 0 0 1 7-7z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 21h6" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 17v4" />
+  </svg>
+);
+
+const HOME_MODALITIES = [
+  {
+    id: 'acupuncture',
+    title: 'Acupuncture',
+    description: 'The practice of inserting and manipulating needles in the body to influence the volume and flow of qi and blood. For those who are more western-minded I offer another definition: the practice of inserting and manipulating needles in the body in order to stimulate tissues (skin, fascia, muscles, tendons, bones, ligaments, nerves, blood vessels, lymph etc.) at varying locations and depths.',
+    icon: NeedleIcon,
+  },
+  {
+    id: 'herbal-medicine',
+    title: 'Herbal Medicine',
+    description: 'The practice of measuring and combining herbs to treat both acute and chronic health problems either in tandem or succession. Herbs are your everyday take-home treatment off the table and are discussed as they\u2019re taken to ensure success and efficacy.',
+    icon: LeafIcon,
+  },
+  {
+    id: 'bodywork',
+    title: 'Bodywork',
+    description: 'The practice of manually manipulating the tissues of the body from the exterior by use of hands, knuckles, forearms, elbows, and tools.',
+    icon: HandRaisedIcon,
+  },
+  {
+    id: 'moxibustion',
+    title: 'Moxibustion',
+    description: 'The practice of burning Ai Ye, or mugwort as it\u2019s known to western herbalists, and passing or holding it over acupuncture channels and points in order to warm, move qi and alleviate pain.',
+    icon: FireIcon,
+  },
+  {
+    id: 'cupping',
+    title: 'Cupping',
+    description: 'The practice of using glass, ceramic or silicone cups to suction and lift skin and fascia to unblock and move stuck qi and blood.',
+    icon: CuppingIcon,
+  },
+];
 
 export const Home: React.FC = () => {
   return (
@@ -115,17 +164,19 @@ export const Home: React.FC = () => {
             <p className="text-earth-500 max-w-xl mx-auto text-sm sm:text-base px-4">Traditional Chinese medicine modalities tailored to your individual needs.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {SERVICES.map((service) => {
-              const IconComponent = SERVICE_ICON_MAP[service.icon] || HeartIcon;
+          <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-6 sm:gap-8">
+            {HOME_MODALITIES.map((modality, index) => {
+              const IconComponent = modality.icon;
+              // First 3 cards: span 2 of 6 cols (1/3 each). Last 2 cards: span 3 of 6 cols (1/2 each).
+              const isBottomRow = index >= 3;
               
               return (
-                <div key={service.id} className="group bg-earth-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 border border-earth-100 hover:border-autumn-200">
+                <div key={modality.id} className={`group bg-earth-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 border border-earth-100 hover:border-autumn-200 ${isBottomRow ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
                   <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
                     <IconComponent className="h-7 w-7 text-autumn-600" />
                   </div>
-                  <h3 className="font-serif text-xl font-bold text-earth-800 mb-3">{service.title}</h3>
-                  <p className="text-earth-600 text-sm leading-relaxed mb-6">{service.description}</p>
+                  <h3 className="font-serif text-xl font-bold text-earth-800 mb-3">{modality.title}</h3>
+                  <p className="text-earth-600 text-sm leading-relaxed mb-6">{modality.description}</p>
                   <Link to="/services" className="inline-flex items-center text-autumn-700 text-sm font-semibold group-hover:gap-2 transition-all">
                     Learn more <ArrowRightIcon className="h-4 w-4 ml-1" />
                   </Link>
