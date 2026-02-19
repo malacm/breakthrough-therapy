@@ -171,16 +171,16 @@ export const Home: React.FC = () => {
               const isBottomRow = index >= 3;
               
               return (
-                <div key={modality.id} className={`group bg-earth-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 border border-earth-100 hover:border-autumn-200 ${isBottomRow ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
+                <Link key={modality.id} to="/services" className={`group bg-earth-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 border border-earth-100 hover:border-autumn-200 flex flex-col ${isBottomRow ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
                   <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
                     <IconComponent className="h-7 w-7 text-autumn-600" />
                   </div>
                   <h3 className="font-serif text-xl font-bold text-earth-800 mb-3">{modality.title}</h3>
-                  <p className="text-earth-600 text-sm leading-relaxed mb-6">{modality.description}</p>
-                  <Link to="/services" className="inline-flex items-center text-autumn-700 text-sm font-semibold group-hover:gap-2 transition-all">
+                  <p className="text-earth-600 text-sm leading-relaxed mb-6 flex-grow">{modality.description}</p>
+                  <span className="inline-flex items-center text-autumn-700 text-sm font-semibold group-hover:gap-2 transition-all mt-auto">
                     Learn more <ArrowRightIcon className="h-4 w-4 ml-1" />
-                  </Link>
-                </div>
+                  </span>
+                </Link>
               );
             })}
           </div>
