@@ -1,0 +1,241 @@
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+interface RevealOptions {
+  y?: number;
+  x?: number;
+  duration?: number;
+  delay?: number;
+  ease?: string;
+  start?: string;
+}
+
+/**
+ * Fade-up (or directional) reveal when element scrolls into view.
+ * Fires once and cleans up on unmount.
+ */
+export function useScrollReveal<T extends HTMLElement>(
+  options: RevealOptions = {},
+) {
+  const ref = useRef<T>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+
+    const {
+      y = 40,
+      x = 0,
+      duration = 0.7,
+      delay = 0,
+      ease = 'power2.out',
+      start = 'top 85%',
+    } = options;
+
+    gsap.set(el, { opacity: 0, y, x });
+
+    const tween = gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      duration,
+      delay,
+      ease,
+      scrollTrigger: {
+        trigger: el,
+        start,
+        once: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
+  return ref;
+}
+
+interface StaggerOptions {
+  childSelector: string;
+  y?: number;
+  x?: number;
+  duration?: number;
+  stagger?: number;
+  ease?: string;
+  start?: string;
+}
+
+/**
+ * Staggered reveal for a container's children (card grids, lists, etc).
+ */
+export function useStaggerReveal<T extends HTMLElement>(
+  options: StaggerOptions,
+) {
+  const ref = useRef<T>(null);
+
+  useLayoutEffect(() => {
+    const container = ref.current;
+    if (!container || prefersReducedMotion()) return;
+
+    const {
+      childSelector,
+      y = 30,
+      x = 0,
+      duration = 0.6,
+      stagger = 0.12,
+      ease = 'power2.out',
+      start = 'top 85%',
+    } = options;
+
+    const children = container.querySelectorAll(childSelector);
+    if (!children.length) return;
+
+    gsap.set(children, { opacity: 0, y, x });
+
+    const tween = gsap.to(children, {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      duration,
+      stagger,
+      ease,
+      scrollTrigger: {
+        trigger: container,
+        start,
+        once: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
+  return ref;
+}
+
+interface HeroRevealOptions {
+  childSelector: string;
+  y?: number;
+  duration?: number;
+  stagger?: number;
+  ease?: string;
+  delay?: number;
+}
+
+/**
+ * Immediate staggered entrance (no scroll trigger) for hero / page-header content.
+ */
+export function useHeroReveal<T extends HTMLElement>(
+  options: HeroRevealOptions,
+) {
+  const ref = useRef<T>(null);
+
+  useLayoutEffect(() => {
+    const container = ref.current;
+    if (!container || prefersReducedMotion()) return;
+
+    const {
+      childSelector,
+      y = 30,
+      duration = 0.8,
+      stagger = 0.15,
+      ease = 'power3.out',
+      delay = 0.1,
+    } = options;
+
+    const children = container.querySelectorAll(childSelector);
+    if (!children.length) return;
+
+    gsap.set(children, { opacity: 0, y });
+
+    const tween = gsap.to(children, {
+      opacity: 1,
+      y: 0,
+      duration,
+      stagger,
+      delay,
+      ease,
+    });
+
+    return () => {
+      tween.kill();
+    };
+  }, []);
+
+  return ref;
+}
+
+/**
+ * Alternating left/right reveal for a list of items.
+ * Even-indexed children slide from left, odd from right.
+ * Supports optional scale for a more dramatic entrance.
+ */
+export function useAlternatingReveal<T extends HTMLElement>(
+  options: Omit<StaggerOptions, 'x'> & { xOffset?: number; scale?: number },
+) {
+  const ref = useRef<T>(null);
+
+  useLayoutEffect(() => {
+    const container = ref.current;
+    if (!container || prefersReducedMotion()) return;
+
+    const {
+      childSelector,
+      y = 20,
+      xOffset = 30,
+      duration = 0.7,
+      scale,
+      ease = 'power2.out',
+      start = 'top 85%',
+    } = options;
+
+    const children = container.querySelectorAll(childSelector);
+    if (!children.length) return;
+
+    const tweens: gsap.core.Tween[] = [];
+
+    children.forEach((child, i) => {
+      const fromX = i % 2 === 0 ? -xOffset : xOffset;
+      const fromState: gsap.TweenVars = { opacity: 0, y, x: fromX };
+      const toState: gsap.TweenVars = { opacity: 1, y: 0, x: 0, duration, ease };
+
+      if (scale !== undefined) {
+        fromState.scale = scale;
+        toState.scale = 1;
+      }
+
+      gsap.set(child, fromState);
+
+      const tween = gsap.to(child, {
+        ...toState,
+        scrollTrigger: {
+          trigger: child,
+          start,
+          once: true,
+        },
+      });
+
+      tweens.push(tween);
+    });
+
+    return () => {
+      tweens.forEach((t) => {
+        t.scrollTrigger?.kill();
+        t.kill();
+      });
+    };
+  }, []);
+
+  return ref;
+}

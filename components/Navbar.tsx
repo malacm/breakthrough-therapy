@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '../constants';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Flower2 } from 'lucide-react';
+import gsap from 'gsap';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const navItemsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!navItemsRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const links = navItemsRef.current.querySelectorAll('.nav-link-anim');
+    if (!links.length) return;
+
+    gsap.set(links, { opacity: 0, y: -8 });
+    const tween = gsap.to(links, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out', delay: 0.2 });
+    return () => { tween.kill(); };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,13 +59,13 @@ export const Navbar: React.FC = () => {
           </NavLink>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div ref={navItemsRef} className="hidden md:flex items-center space-x-8">
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `text-sm font-medium tracking-wider transition-colors ${
+                  `nav-link-anim text-sm font-medium tracking-wider transition-colors ${
                     isHomePage
                       ? scrolled 
                         ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`

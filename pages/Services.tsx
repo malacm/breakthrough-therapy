@@ -3,6 +3,7 @@ import { SERVICES, SERVICE_ICON_MAP } from '../constants';
 import { Button } from '../components/Button';
 import { BookingModal } from '../components/BookingModal';
 import { CalendarIcon, HeartIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { useHeroReveal, useScrollReveal, useAlternatingReveal } from '../lib/useGsap';
 
 export const Services: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,18 +22,23 @@ export const Services: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const headerRef = useHeroReveal<HTMLDivElement>({ childSelector: '.svc-header-anim', y: 40, stagger: 0.18, ease: 'power3.out' });
+  const calloutRef = useScrollReveal<HTMLDivElement>({ y: 50, duration: 0.8 });
+  const cardsRef = useAlternatingReveal<HTMLDivElement>({ childSelector: '.service-card', xOffset: 60, y: 40, scale: 0.96, duration: 0.85, ease: 'power3.out' });
+  const pricingRef = useScrollReveal<HTMLDivElement>({ y: 50, duration: 0.8 });
+
   return (
     <div className="pt-24 min-h-screen bg-earth-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-8 sm:mb-12 md:mb-16">
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Services</h1>
-          <p className="text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
+        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h1 className="svc-header-anim font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Services</h1>
+          <p className="svc-header-anim text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
             Traditional Chinese medicine modalities tailored to your individual needs.
           </p>
         </div>
 
         {/* Mobile Services Callout */}
-        <div className="mb-8 sm:mb-10 md:mb-12 bg-autumn-50 border border-autumn-200 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-4 max-w-2xl mx-auto">
+        <div ref={calloutRef} className="mb-8 sm:mb-10 md:mb-12 bg-autumn-50 border border-autumn-200 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-4 max-w-2xl mx-auto">
             <div className="bg-autumn-100 p-3 rounded-full shrink-0">
                 <MapPinIcon className="h-6 w-6 text-autumn-700" />
             </div>
@@ -42,13 +48,13 @@ export const Services: React.FC = () => {
             </div>
         </div>
 
-        <div className="space-y-8 sm:space-y-10 md:space-y-12">
+        <div ref={cardsRef} className="space-y-8 sm:space-y-10 md:space-y-12">
           {SERVICES.map((service, index) => {
              const IconComponent = SERVICE_ICON_MAP[service.icon] || HeartIcon;
              const isEven = index % 2 === 0;
 
              return (
-               <div key={service.id} className={`bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-earth-100 overflow-hidden flex flex-col md:flex-row ${isEven ? '' : 'md:flex-row-reverse'}`}>
+               <div key={service.id} className={`service-card bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-earth-100 overflow-hidden flex flex-col md:flex-row ${isEven ? '' : 'md:flex-row-reverse'}`}>
                  <div className="md:w-1/3 bg-autumn-50 p-6 sm:p-8 md:p-12 flex flex-col justify-center items-center text-center">
                     <div className="bg-white p-3 sm:p-4 rounded-full shadow-sm mb-4 sm:mb-6">
                         <IconComponent className="h-8 w-8 sm:h-10 sm:w-10 text-autumn-600" />
@@ -78,7 +84,7 @@ export const Services: React.FC = () => {
         </div>
         
         {/* Pricing Note */}
-        <div className="mt-8 sm:mt-12 md:mt-16 bg-earth-100 p-6 sm:p-8 rounded-xl sm:rounded-2xl text-center">
+        <div ref={pricingRef} className="mt-8 sm:mt-12 md:mt-16 bg-earth-100 p-6 sm:p-8 rounded-xl sm:rounded-2xl text-center">
             <h3 className="font-serif text-lg sm:text-xl font-bold text-earth-800 mb-2 sm:mb-3">The Pricing</h3>
             <div className="text-earth-600 max-w-2xl mx-auto text-sm sm:text-base px-4 space-y-2">
                 <p>First Visit (100 minutes) — $150</p>

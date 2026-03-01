@@ -1,6 +1,11 @@
 import React from 'react';
+import { useHeroReveal, useScrollReveal, useStaggerReveal } from '../lib/useGsap';
 
 export const About: React.FC = () => {
+  const headerRef = useHeroReveal<HTMLDivElement>({ childSelector: '.about-header-anim', y: 30, stagger: 0.15, ease: 'power3.out' });
+  const bioImageRef = useScrollReveal<HTMLDivElement>({ x: -30, y: 0, duration: 0.8 });
+  const bioTextRef = useStaggerReveal<HTMLDivElement>({ childSelector: '.bio-anim', y: 25, stagger: 0.1 });
+
   return (
     <div className="pt-24 min-h-screen relative overflow-hidden">
       {/* Layered background */}
@@ -26,20 +31,19 @@ export const About: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12 md:mb-16">
-          <span className="inline-block py-1 px-3 border border-autumn-300/60 rounded-full text-autumn-700 text-xs font-semibold tracking-widest uppercase mb-4 bg-white/50 backdrop-blur-sm">
+        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
+          <span className="about-header-anim inline-block py-1 px-3 border border-autumn-300/60 rounded-full text-autumn-700 text-xs font-semibold tracking-widest uppercase mb-4 bg-white/50 backdrop-blur-sm">
             About
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Practitioner</h1>
-          <p className="text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
+          <h1 className="about-header-anim font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Practitioner</h1>
+          <p className="about-header-anim text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
             Ian Turley L.Ac — Licensed Acupuncturist
           </p>
         </div>
 
         {/* Bio Section */}
         <div className="grid md:grid-cols-12 gap-6 sm:gap-8 md:gap-12 items-start mb-12 sm:mb-16 md:mb-24">
-            <div className="md:col-span-5 relative">
-                {/* Warm vignette behind the headshot */}
+            <div ref={bioImageRef} className="md:col-span-5 relative">
                 <div className="absolute -inset-8 bg-gradient-to-br from-autumn-100/50 via-transparent to-earth-200/30 rounded-3xl blur-2xl -z-10 hidden md:block" />
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-earth-200/50">
                     <img 
@@ -51,11 +55,11 @@ export const About: React.FC = () => {
                 <div className="absolute -bottom-8 -right-8 bg-autumn-100 p-8 rounded-full hidden lg:block z-[-1] w-48 h-48"></div>
             </div>
             
-            <div className="md:col-span-7 space-y-4 sm:space-y-6">
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-earth-800">Ian Turley L.Ac</h2>
-                <h3 className="text-autumn-700 font-medium tracking-wide uppercase text-xs sm:text-sm">Licensed Acupuncturist</h3>
+            <div ref={bioTextRef} className="md:col-span-7 space-y-4 sm:space-y-6">
+                <h2 className="bio-anim font-serif text-2xl sm:text-3xl font-bold text-earth-800">Ian Turley L.Ac</h2>
+                <h3 className="bio-anim text-autumn-700 font-medium tracking-wide uppercase text-xs sm:text-sm">Licensed Acupuncturist</h3>
                 
-                <div className="text-earth-600 space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base border-l-2 border-autumn-200/70 pl-5 sm:pl-6">
+                <div className="bio-anim text-earth-600 space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base border-l-2 border-autumn-200/70 pl-5 sm:pl-6">
                     <p>
                         My journey into medicine began well before I ever took my first class. As a child I marveled at every life-form I came across. I threw dead bugs into anthills, collected fireflies and ladybugs, and lifted river rocks in search of iridescent salamanders and newts. This fundamental curiosity about biology stuck with me and inevitably drove me to study the human body; but before that, I had to cut my teeth in the working world.
                     </p>
