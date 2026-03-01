@@ -87,15 +87,29 @@ function getDriveClient() {
   return google.drive({ version: 'v3', auth: oauth2Client });
 }
 
+async function createClientFolder(clientName: string): Promise<string> {
+  const drive = getDriveClient();
+  const response = await drive.files.create({
+    requestBody: {
+      name: `${clientName} — Not Signed`,
+      mimeType: 'application/vnd.google-apps.folder',
+      parents: TEMPLATE_FOLDER_ID ? [TEMPLATE_FOLDER_ID] : undefined,
+    },
+    fields: 'id',
+  });
+  return response.data.id || '';
+}
+
 async function copyTemplateDoc(
   templateId: string,
   docType: string,
   clientName: string,
   eventDate: string,
+  targetFolderId: string,
 ): Promise<{ fileId: string; webViewLink: string }> {
   const drive = getDriveClient();
   const copyRequest: any = { name: `${docType} — ${clientName} — ${eventDate}` };
-  if (TEMPLATE_FOLDER_ID) copyRequest.parents = [TEMPLATE_FOLDER_ID];
+  if (targetFolderId) copyRequest.parents = [targetFolderId];
 
   const response = await drive.files.copy({
     fileId: templateId,
@@ -109,14 +123,8 @@ async function copyTemplateDoc(
   };
 }
 
-async function setDocPermissions(fileId: string, clientEmail: string): Promise<void> {
+async function setOwnerPermissions(fileId: string): Promise<void> {
   const drive = getDriveClient();
-
-  await drive.permissions.create({
-    fileId,
-    requestBody: { role: 'writer', type: 'user', emailAddress: clientEmail },
-    sendNotificationEmail: false,
-  });
 
   if (OWNER_EMAIL) {
     await drive.permissions.create({
@@ -132,15 +140,35 @@ async function setDocPermissions(fileId: string, clientEmail: string): Promise<v
   });
 }
 
+async function setClientAndOwnerPermissions(fileId: string, clientEmail: string): Promise<void> {
+  const drive = getDriveClient();
+
+  await drive.permissions.create({
+    fileId,
+    requestBody: { role: 'writer', type: 'user', emailAddress: clientEmail },
+    sendNotificationEmail: false,
+  });
+
+  await setOwnerPermissions(fileId);
+}
+
 async function createBookingDocs(
   clientName: string,
   clientEmail: string,
   eventDate: string,
 ): Promise<BookingDocs> {
-  const docTypes: Array<{ key: keyof typeof TEMPLATE_IDS; label: string; type: GoogleDocResult['docType'] }> = [
-    { key: 'consent', label: 'Informed Consent', type: 'consent' },
-    { key: 'arbitration', label: 'Agreement to Arbitration', type: 'arbitration' },
-    { key: 'intake', label: 'Medical History Intake', type: 'intake' },
+  const folderId = await createClientFolder(clientName);
+  console.log(`Created client folder: ${clientName} — Not Signed (${folderId})`);
+
+  const docTypes: Array<{
+    key: keyof typeof TEMPLATE_IDS;
+    label: string;
+    type: GoogleDocResult['docType'];
+    clientAccess: boolean;
+  }> = [
+    { key: 'consent', label: 'Informed Consent', type: 'consent', clientAccess: false },
+    { key: 'arbitration', label: 'Agreement to Arbitration', type: 'arbitration', clientAccess: false },
+    { key: 'intake', label: 'Medical History Intake', type: 'intake', clientAccess: true },
   ];
 
   const results: Record<string, GoogleDocResult> = {};
@@ -153,8 +181,13 @@ async function createBookingDocs(
       );
     }
 
-    const { fileId, webViewLink } = await copyTemplateDoc(templateId, doc.label, clientName, eventDate);
-    await setDocPermissions(fileId, clientEmail);
+    const { fileId, webViewLink } = await copyTemplateDoc(templateId, doc.label, clientName, eventDate, folderId);
+
+    if (doc.clientAccess) {
+      await setClientAndOwnerPermissions(fileId, clientEmail);
+    } else {
+      await setOwnerPermissions(fileId);
+    }
 
     results[doc.type] = {
       docId: fileId,
@@ -222,31 +255,15 @@ function buildEmailHtml(booking: Booking, docs: BookingDocs): string {
                   </td>
                 </tr>
               </table>
-              <h3 style="color:#4a3728; margin:0 0 8px 0; font-size:18px;">Required Documents</h3>
+              <h3 style="color:#4a3728; margin:0 0 8px 0; font-size:18px;">Medical History Intake</h3>
               <p style="color:#6b5c4d; font-size:15px; line-height:1.6; margin:0 0 20px 0;">
-                Please review and sign the following documents before your appointment. These documents are private and shared only between you and your practitioner.
+                Please complete the following form before your appointment. This document is private and shared only between you and your practitioner.
               </p>
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
-                <tr><td style="background-color:#f5f0eb; border-radius:8px; padding:16px 20px;">
-                  <table width="100%" cellpadding="0" cellspacing="0"><tr>
-                    <td><p style="color:#4a3728; font-size:15px; font-weight:bold; margin:0 0 4px 0;">1. Informed Consent</p><p style="color:#6b5c4d; font-size:13px; margin:0;">Review and consent to treatment</p></td>
-                    <td width="140" align="right" valign="middle"><a href="${docs.consent.docUrl}" style="display:inline-block; background-color:#4a3728; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:6px; font-size:14px;">Open Document</a></td>
-                  </tr></table>
-                </td></tr>
-              </table>
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
-                <tr><td style="background-color:#f5f0eb; border-radius:8px; padding:16px 20px;">
-                  <table width="100%" cellpadding="0" cellspacing="0"><tr>
-                    <td><p style="color:#4a3728; font-size:15px; font-weight:bold; margin:0 0 4px 0;">2. Agreement to Arbitration</p><p style="color:#6b5c4d; font-size:13px; margin:0;">Review and agree to arbitration terms</p></td>
-                    <td width="140" align="right" valign="middle"><a href="${docs.arbitration.docUrl}" style="display:inline-block; background-color:#4a3728; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:6px; font-size:14px;">Open Document</a></td>
-                  </tr></table>
-                </td></tr>
-              </table>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
                 <tr><td style="background-color:#f5f0eb; border-radius:8px; padding:16px 20px;">
                   <table width="100%" cellpadding="0" cellspacing="0"><tr>
-                    <td><p style="color:#4a3728; font-size:15px; font-weight:bold; margin:0 0 4px 0;">3. Medical History Intake</p><p style="color:#6b5c4d; font-size:13px; margin:0;">Provide your health history and details</p></td>
-                    <td width="140" align="right" valign="middle"><a href="${docs.intake.docUrl}" style="display:inline-block; background-color:#4a3728; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:6px; font-size:14px;">Open Document</a></td>
+                    <td><p style="color:#4a3728; font-size:15px; font-weight:bold; margin:0 0 4px 0;">Medical History Intake</p><p style="color:#6b5c4d; font-size:13px; margin:0;">Provide your health history and details</p></td>
+                    <td width="140" align="right" valign="middle"><a href="${docs.intake.docUrl}" style="display:inline-block; background-color:#4a3728; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:6px; font-size:14px;">Open Form</a></td>
                   </tr></table>
                 </td></tr>
               </table>
@@ -287,19 +304,13 @@ Service: ${booking.eventType}
 Date: ${formattedDate}
 Time: ${formattedTime}
 
-REQUIRED DOCUMENTS
-------------------
-Please review and sign the following documents before your appointment.
-These documents are private and shared only between you and your practitioner.
+MEDICAL HISTORY INTAKE
+----------------------
+Please complete the following form before your appointment.
+This document is private and shared only between you and your practitioner.
 
-1. Informed Consent
-   ${docs.consent.docUrl}
-
-2. Agreement to Arbitration
-   ${docs.arbitration.docUrl}
-
-3. Medical History Intake
-   ${docs.intake.docUrl}
+Medical History Intake:
+${docs.intake.docUrl}
 
 If you have any questions, feel free to reply to this email.
 We look forward to seeing you!
