@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
                 ? (scrolled ? 'text-earth-800' : 'text-white')
                 : 'text-autumn-600'
             }`}>
-              Breakthrough
+              BreakThrough
             </span>
           </NavLink>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SERVICES, SERVICE_ICON_MAP } from '../constants';
 import { Button } from '../components/Button';
 import { BookingModal } from '../components/BookingModal';
-import { CalendarIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, HeartIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 export const Services: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +31,17 @@ export const Services: React.FC = () => {
           </p>
         </div>
 
+        {/* Mobile Services Callout */}
+        <div className="mb-8 sm:mb-10 md:mb-12 bg-autumn-50 border border-autumn-200 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-4 max-w-2xl mx-auto">
+            <div className="bg-autumn-100 p-3 rounded-full shrink-0">
+                <MapPinIcon className="h-6 w-6 text-autumn-700" />
+            </div>
+            <div>
+                <p className="text-base sm:text-lg font-semibold text-earth-800">Currently Offering Mobile Services Only</p>
+                <p className="text-earth-600 text-sm sm:text-base mt-1">All services are priced for mobile visits in the Los Angeles area. Pricing will be updated when office visits become available.</p>
+            </div>
+        </div>
+
         <div className="space-y-8 sm:space-y-10 md:space-y-12">
           {SERVICES.map((service, index) => {
              const IconComponent = SERVICE_ICON_MAP[service.icon] || HeartIcon;
@@ -44,6 +55,7 @@ export const Services: React.FC = () => {
                     </div>
                     <h3 className="font-serif text-xl sm:text-2xl font-bold text-earth-800 mb-2">{service.title}</h3>
                     <p className="text-autumn-700 font-semibold text-base sm:text-lg">{service.price}</p>
+                    <p className="text-earth-500 text-xs sm:text-sm mt-1 uppercase tracking-wide font-medium">Mobile Only</p>
                  </div>
                  <div className="md:w-2/3 p-6 sm:p-8 md:p-12 flex flex-col justify-center">
                     <p className="text-earth-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
@@ -75,9 +87,9 @@ export const Services: React.FC = () => {
                 <p>Chinese Medical Massage (90 minutes) — $350</p>
                 <p>Acupuncture & Massage (60 minutes) — $220</p>
                 <p>Telehealth (30 minutes) — $50</p>
-                <p className="mt-4 text-xs italic">All services are currently priced for mobile services — pricing will be updated when office visits are available.</p>
             </div>
         </div>
+
       </div>
 
       {/* Booking Modal */}

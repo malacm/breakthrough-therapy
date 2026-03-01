@@ -6,12 +6,12 @@ import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import { getHeroImageUrl, getApproachImageUrl } from '../lib/seasonImages';
 
-// Leaf icon (not available in Heroicons)
 const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4-4-8-7.5-8-12a8 8 0 0116 0c0 4.5-4 8-8 12z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21V10" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M8 14c2-1.5 4-3 4-4" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 21c0 0 2-4 7-9s9-7 9-7c0 0-1.5 5-6 9.5S5 21 5 21z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 21C9 17 13.5 12.5 21 5" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17c1.5-2 3-3.5 5-5" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 15.5c2-1 3.5-2.5 5.5-4.5" />
   </svg>
 );
 

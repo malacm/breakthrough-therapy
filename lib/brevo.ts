@@ -4,7 +4,7 @@ import type { Booking, BookingDocs } from '../types';
 // Initialize Brevo transactional email API
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const FROM_EMAIL = process.env.BREVO_FROM_EMAIL || '';
-const FROM_NAME = process.env.BREVO_FROM_NAME || 'Breakthrough Holistic Therapy';
+const FROM_NAME = process.env.BREVO_FROM_NAME || 'BreakThrough Therapy';
 
 /**
  * Formats a date string into a human-readable format.
@@ -56,7 +56,7 @@ function buildEmailHtml(booking: Booking, docs: BookingDocs): string {
           <tr>
             <td style="background-color:#4a3728; padding:32px 40px; text-align:center;">
               <h1 style="color:#ffffff; margin:0; font-size:24px; font-weight:normal; letter-spacing:1px;">
-                Breakthrough Holistic Therapy
+                BreakThrough Therapy
               </h1>
             </td>
           </tr>
@@ -191,7 +191,7 @@ function buildEmailHtml(booking: Booking, docs: BookingDocs): string {
           <tr>
             <td style="background-color:#f5f0eb; padding:24px 40px; text-align:center;">
               <p style="color:#8b7d6e; font-size:13px; margin:0;">
-                Breakthrough Holistic Therapy<br />
+                BreakThrough Therapy<br />
                 Traditional Chinese Medicine
               </p>
               <p style="color:#a89b8c; font-size:12px; margin:8px 0 0 0;">
@@ -217,7 +217,7 @@ function buildEmailText(booking: Booking, docs: BookingDocs): string {
   const formattedTime = formatTime(booking.eventDate, booking.timezone);
 
   return `
-BREAKTHROUGH HOLISTIC THERAPY
+BREAKTHROUGH THERAPY
 Booking Confirmed
 
 Thank you for booking with us, ${booking.clientName}.
@@ -246,7 +246,7 @@ If you have any questions, feel free to reply to this email.
 We look forward to seeing you!
 
 ---
-Breakthrough Holistic Therapy
+BreakThrough Therapy
 Traditional Chinese Medicine
 
 This email contains confidential health information.
