@@ -5,7 +5,7 @@ import { ArrowRightIcon, StarIcon, HeartIcon, ShieldCheckIcon, HandRaisedIcon, F
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import { getHeroImageUrl, getApproachImageUrl } from '../lib/seasonImages';
-import { useHeroReveal, useScrollReveal, useStaggerReveal } from '../lib/useGsap';
+import { useHeroReveal, useScrollReveal, useStaggerReveal, useInfiniteCarousel } from '../lib/useGsap';
 
 const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
@@ -73,7 +73,7 @@ export const Home: React.FC = () => {
   const servicesHeadingRef = useScrollReveal<HTMLDivElement>({ y: 30 });
   const servicesGridRef = useStaggerReveal<HTMLDivElement>({ childSelector: '.modality-card', y: 30, stagger: 0.12 });
   const testimonialsHeadingRef = useScrollReveal<HTMLHeadingElement>({ y: 25 });
-  const testimonialsGridRef = useStaggerReveal<HTMLDivElement>({ childSelector: '.testimonial-card', y: 30, stagger: 0.15 });
+  const testimonialsTrackRef = useInfiniteCarousel<HTMLDivElement>(45);
   const ctaRef = useScrollReveal<HTMLDivElement>({ y: 30 });
 
   return (
@@ -197,23 +197,30 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-12 sm:py-16 md:py-24 bg-autumn-50 border-y border-autumn-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 ref={testimonialsHeadingRef} className="font-serif text-2xl sm:text-3xl font-bold text-earth-800 mb-8 sm:mb-12">Stories of Healing</h2>
-            <div ref={testimonialsGridRef} className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-                {TESTIMONIALS.map((t) => (
-                    <div key={t.id} className="testimonial-card bg-white p-8 rounded-xl shadow-sm relative">
-                        <div className="flex justify-center mb-4">
-                            {[...Array(5)].map((_, i) => (
-                                <StarSolidIcon key={i} className="h-4 w-4 text-amber-400" />
-                            ))}
-                        </div>
-                        <p className="text-earth-600 italic mb-6">"{t.text}"</p>
-                        <h4 className="font-serif font-bold text-earth-800">{t.name}</h4>
-                        <span className="text-xs text-earth-400 uppercase tracking-wide">{t.location}</span>
-                    </div>
-                ))}
+      <section className="py-12 sm:py-16 md:py-24 bg-autumn-50 border-y border-autumn-100 overflow-hidden">
+        <div className="text-center mb-8 sm:mb-12 px-4">
+          <h2 ref={testimonialsHeadingRef} className="font-serif text-2xl sm:text-3xl font-bold text-earth-800">Stories of Healing</h2>
+        </div>
+        {/* Fade edges */}
+        <div className="relative">
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 sm:w-40 z-10 bg-gradient-to-r from-autumn-50 to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 sm:w-40 z-10 bg-gradient-to-l from-autumn-50 to-transparent" />
+          <div className="flex" style={{ willChange: 'transform' }}>
+            <div ref={testimonialsTrackRef} className="flex gap-6 sm:gap-8" style={{ willChange: 'transform' }}>
+              {TESTIMONIALS.map((t) => (
+                <div key={t.id} className="flex-shrink-0 w-72 sm:w-80 bg-white p-8 rounded-xl shadow-sm">
+                  <div className="flex justify-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <StarSolidIcon key={i} className="h-4 w-4 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-earth-600 italic mb-6">"{t.text}"</p>
+                  <h4 className="font-serif font-bold text-earth-800">{t.name}</h4>
+                  <span className="text-xs text-earth-400 uppercase tracking-wide">{t.location}</span>
+                </div>
+              ))}
             </div>
+          </div>
         </div>
       </section>
 

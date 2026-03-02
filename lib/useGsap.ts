@@ -177,6 +177,70 @@ export function useHeroReveal<T extends HTMLElement>(
 }
 
 /**
+ * Infinite horizontal marquee for a strip of cards.
+ * Duplicates the inner track so the loop is seamless.
+ * Pauses on hover and respects prefers-reduced-motion.
+ */
+export function useInfiniteCarousel<T extends HTMLElement>(
+  speed: number = 40, // px per second
+) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const track = ref.current;
+    if (!track) return;
+
+    if (prefersReducedMotion()) {
+      // Just show cards statically
+      track.style.overflow = 'auto';
+      return;
+    }
+
+    // Duplicate children so the loop is seamless
+    const original = Array.from(track.children) as HTMLElement[];
+    original.forEach((child) => {
+      const clone = child.cloneNode(true) as HTMLElement;
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+
+    const totalWidth = original.reduce(
+      (sum, el) => sum + el.offsetWidth + parseInt(getComputedStyle(el).marginRight || '0'),
+      0,
+    );
+
+    const duration = totalWidth / speed;
+
+    const tween = gsap.to(track, {
+      x: -totalWidth,
+      duration,
+      ease: 'none',
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize((x: number) => parseFloat(x) % totalWidth),
+      },
+    });
+
+    const pause = () => tween.pause();
+    const resume = () => tween.play();
+
+    track.addEventListener('mouseenter', pause);
+    track.addEventListener('mouseleave', resume);
+
+    return () => {
+      tween.kill();
+      track.removeEventListener('mouseenter', pause);
+      track.removeEventListener('mouseleave', resume);
+      // Remove clones
+      const clones = Array.from(track.children).slice(original.length);
+      clones.forEach((c) => track.removeChild(c));
+    };
+  }, [speed]);
+
+  return ref;
+}
+
+/**
  * Alternating left/right reveal for a list of items.
  * Even-indexed children slide from left, odd from right.
  * Supports optional scale for a more dramatic entrance.

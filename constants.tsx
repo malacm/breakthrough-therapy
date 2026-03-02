@@ -84,20 +84,32 @@ export const SERVICES: Service[] = [
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 't1',
-    name: 'Patient Review',
-    text: "Ian's approach to Chinese medicine is truly unique. The depth of attention and personalized care I receive in each session has made a significant difference in my health.",
-    location: 'Los Angeles, CA'
+    name: 'Steven Lawrence',
+    text: "Ian is a gifted healer with a positive attitude that's inspiring. Using acupuncture, herbs, and sometimes massage, he's helped me recover from GI problems and joint pain. I highly recommend him!",
+    location: 'Google Review'
   },
   {
     id: 't2',
-    name: 'Patient Review',
-    text: "The custom herbal formulas have been transformative. Unlike other practitioners, Ian takes the time to understand my condition and adjusts the treatment as I heal.",
-    location: 'Los Angeles, CA'
+    name: 'Joshua Kwon',
+    text: "Ian is not only talented in the healing arts he is also incredibly kind-hearted and an excellent communicator.",
+    location: 'Google Review'
   },
   {
     id: 't3',
-    name: 'Patient Review',
-    text: "The active, hands-on approach means every minute of my treatment is purposeful. I feel heard, understood, and most importantly, I'm seeing real results that last.",
-    location: 'Los Angeles, CA'
+    name: 'Suzanne Kanj',
+    text: "I was introduced to Ian through a friend after I told her about my back and shoulder pain which I developed from a previous injury. I had never received a massage from a male therapist before, but I trusted my friend's recommendation.",
+    location: 'Google Review'
+  },
+  {
+    id: 't4',
+    name: 'Abbey Seiden',
+    text: "I have had a hunched over posture since adolescence and have tried many different modalities throughout my life. None have been as effective and long lasting as the style Ian offers. He is extremely skilled at finding holding patterns.",
+    location: 'Google Review'
+  },
+  {
+    id: 't5',
+    name: 'Mark Benjamin',
+    text: "Amazing acupuncture. Ian is extremely knowledgeable and has a true healing touch.",
+    location: 'Google Review'
   }
 ];
