@@ -47,7 +47,7 @@ export const About: React.FC = () => {
                 <div className="absolute -inset-8 bg-gradient-to-br from-autumn-100/50 via-transparent to-earth-200/30 rounded-3xl blur-2xl -z-10 hidden md:block" />
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-earth-200/50">
                     <img 
-                        src="/images/tempheadshot.jpg" 
+                        src="/images/headshot.jpg" 
                         alt="Ian Turley L.Ac - Licensed Acupuncturist" 
                         className="w-full h-full object-cover"
                     />
