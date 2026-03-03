@@ -87,13 +87,46 @@ function getDriveClient() {
   return google.drive({ version: 'v3', auth: oauth2Client });
 }
 
-async function createClientFolder(clientName: string): Promise<string> {
+const IDEMPOTENCY_PROP_KEY = 'calendly_invitee_id';
+
+/** Thrown when this invitee was already processed (duplicate webhook). */
+class AlreadyProcessedError extends Error {
+  constructor(inviteeId: string) {
+    super(`Booking already processed for invitee: ${inviteeId}`);
+    this.name = 'AlreadyProcessedError';
+  }
+}
+
+/** Extract UUID from Calendly invitee URI (e.g. .../scheduled_invitees/UUID). */
+function getInviteeId(uri: string): string {
+  const parts = uri.split('/');
+  return parts[parts.length - 1] || uri;
+}
+
+/**
+ * Check if we've already processed this invitee (idempotency guard).
+ * Calendly can send duplicate webhooks (retries, multiple subscriptions, etc.).
+ */
+async function findExistingFolderByInvitee(inviteeId: string): Promise<string | null> {
+  if (!TEMPLATE_FOLDER_ID) return null;
+  const drive = getDriveClient();
+  const res = await drive.files.list({
+    q: `'${TEMPLATE_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.folder' and appProperties has { key='${IDEMPOTENCY_PROP_KEY}' and value='${inviteeId}' }`,
+    fields: 'files(id)',
+    pageSize: 1,
+  });
+  const id = res.data.files?.[0]?.id;
+  return typeof id === 'string' ? id : null;
+}
+
+async function createClientFolder(clientName: string, inviteeId: string): Promise<string> {
   const drive = getDriveClient();
   const response = await drive.files.create({
     requestBody: {
       name: `${clientName} — Not Signed`,
       mimeType: 'application/vnd.google-apps.folder',
       parents: TEMPLATE_FOLDER_ID ? [TEMPLATE_FOLDER_ID] : undefined,
+      appProperties: { [IDEMPOTENCY_PROP_KEY]: inviteeId },
     },
     fields: 'id',
   });
@@ -156,8 +189,15 @@ async function createBookingDocs(
   clientName: string,
   clientEmail: string,
   eventDate: string,
+  inviteeUri: string,
 ): Promise<BookingDocs> {
-  const folderId = await createClientFolder(clientName);
+  const inviteeId = getInviteeId(inviteeUri);
+  const existingFolderId = await findExistingFolderByInvitee(inviteeId);
+  if (existingFolderId) {
+    throw new AlreadyProcessedError(inviteeId);
+  }
+
+  const folderId = await createClientFolder(clientName, inviteeId);
   console.log(`Created client folder: ${clientName} — Not Signed (${folderId})`);
 
   const docTypes: Array<{
@@ -438,7 +478,12 @@ async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<v
     });
 
     console.log('Creating Google Docs...');
-    const docs = await createBookingDocs(booking.clientName, booking.clientEmail, eventDateFormatted);
+    const docs = await createBookingDocs(
+      booking.clientName,
+      booking.clientEmail,
+      eventDateFormatted,
+      booking.calendlyInviteeUri,
+    );
     console.log('Google Docs created successfully:', {
       consent: docs.consent.docId,
       arbitration: docs.arbitration.docId,
@@ -449,6 +494,10 @@ async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<v
     await sendBookingConfirmationEmail(booking, docs);
     console.log('Confirmation email sent successfully to', booking.clientEmail);
   } catch (error: any) {
+    if (error instanceof AlreadyProcessedError) {
+      console.log('Skipping duplicate webhook:', error.message);
+      return;
+    }
     console.error('Error processing booking in background:', error.message || error);
   }
 }
