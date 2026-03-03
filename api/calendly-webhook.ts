@@ -3,6 +3,7 @@ import { waitUntil } from '@vercel/functions';
 import crypto from 'crypto';
 import { google } from 'googleapis';
 import * as Brevo from '@getbrevo/brevo';
+import { kv } from '@vercel/kv';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -468,8 +469,29 @@ async function extractBookingData(webhookPayload: CalendlyWebhookPayload): Promi
  * Process the booking in the background: create Google Docs + send email.
  * This runs AFTER we've already returned 200 to Calendly, preventing retries.
  */
+const PROCESSED_TTL_SEC = 90 * 24 * 60 * 60; // 90 days
+
+/** Atomic lock: only one request per invitee can proceed. Prevents race from duplicate webhooks. */
+async function claimProcessing(inviteeId: string): Promise<boolean> {
+  try {
+    const key = `calendly:processed:${inviteeId}`;
+    const result = await kv.set(key, '1', { nx: true, ex: PROCESSED_TTL_SEC });
+    return result === 'OK';
+  } catch (e) {
+    console.warn('KV unavailable, falling back to Drive check:', (e as Error).message);
+    return true;
+  }
+}
+
 async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<void> {
   try {
+    const inviteeId = getInviteeId(webhookPayload.payload.uri);
+    const claimed = await claimProcessing(inviteeId);
+    if (!claimed) {
+      console.log('Duplicate webhook ignored (already processed):', inviteeId);
+      return;
+    }
+
     const booking = await extractBookingData(webhookPayload);
     console.log(`Processing booking for ${booking.clientName} (${booking.clientEmail})`);
 
