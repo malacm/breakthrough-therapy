@@ -72,6 +72,11 @@ interface StaggerOptions {
   stagger?: number;
   ease?: string;
   start?: string;
+  /**
+   * Skip reveal (leave children visible) when viewport width is below this (px).
+   * Use for bottom-of-page content where ScrollTrigger can fail to fire on mobile.
+   */
+  skipBelowWidth?: number;
 }
 
 /**
@@ -94,7 +99,16 @@ export function useStaggerReveal<T extends HTMLElement>(
       stagger = 0.12,
       ease = 'power2.out',
       start = 'top 85%',
+      skipBelowWidth,
     } = options;
+
+    if (
+      skipBelowWidth != null &&
+      typeof window !== 'undefined' &&
+      window.innerWidth < skipBelowWidth
+    ) {
+      return;
+    }
 
     const children = container.querySelectorAll(childSelector);
     if (!children.length) return;

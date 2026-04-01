@@ -20,7 +20,13 @@ const FacebookIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const Footer: React.FC = () => {
-  const columnsRef = useStaggerReveal<HTMLDivElement>({ childSelector: '.footer-col', y: 30, stagger: 0.1, start: 'top 90%' });
+  const columnsRef = useStaggerReveal<HTMLDivElement>({
+    childSelector: '.footer-col',
+    y: 30,
+    stagger: 0.1,
+    start: 'top 90%',
+    skipBelowWidth: 768,
+  });
 
   return (
     <footer className="bg-earth-100 pt-16 pb-8 border-t border-earth-200">
