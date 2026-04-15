@@ -89,6 +89,8 @@ function getDriveClient() {
 }
 
 const IDEMPOTENCY_PROP_KEY = 'calendly_invitee_id';
+const CLIENT_EMAIL_PROP_KEY = 'client_email';
+const CLIENT_PROCESSED_TTL_SEC = 5 * 365 * 24 * 60 * 60; // 5 years
 
 /** Thrown when this invitee was already processed (duplicate webhook). */
 class AlreadyProcessedError extends Error {
@@ -102,6 +104,41 @@ class AlreadyProcessedError extends Error {
 function getInviteeId(uri: string): string {
   const parts = uri.split('/');
   return parts[parts.length - 1] || uri;
+}
+
+/** Returns true if this client email has already been fully onboarded (has a Drive folder). */
+async function isReturningClient(email: string): Promise<boolean> {
+  try {
+    const key = `calendly:client:${email.toLowerCase().trim()}`;
+    const val = await kv.get(key);
+    return val !== null;
+  } catch (e) {
+    console.warn('KV unavailable for returning-client check:', (e as Error).message);
+    return false; // fall through to Drive check inside createBookingDocs
+  }
+}
+
+/** Marks this client email as onboarded so future bookings skip folder/forms/email. */
+async function markClientProcessed(email: string): Promise<void> {
+  try {
+    const key = `calendly:client:${email.toLowerCase().trim()}`;
+    await kv.set(key, '1', { ex: CLIENT_PROCESSED_TTL_SEC });
+  } catch (e) {
+    console.warn('KV unavailable to mark client processed:', (e as Error).message);
+  }
+}
+
+/** Drive fallback: find an existing folder by client email (used when KV is unavailable). */
+async function findExistingFolderByEmail(email: string): Promise<string | null> {
+  if (!TEMPLATE_FOLDER_ID) return null;
+  const drive = getDriveClient();
+  const res = await drive.files.list({
+    q: `'${TEMPLATE_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.folder' and appProperties has { key='${CLIENT_EMAIL_PROP_KEY}' and value='${email.toLowerCase().trim()}' }`,
+    fields: 'files(id)',
+    pageSize: 1,
+  });
+  const id = res.data.files?.[0]?.id;
+  return typeof id === 'string' ? id : null;
 }
 
 /**
@@ -120,14 +157,17 @@ async function findExistingFolderByInvitee(inviteeId: string): Promise<string | 
   return typeof id === 'string' ? id : null;
 }
 
-async function createClientFolder(clientName: string, inviteeId: string): Promise<string> {
+async function createClientFolder(clientName: string, clientEmail: string, inviteeId: string): Promise<string> {
   const drive = getDriveClient();
   const response = await drive.files.create({
     requestBody: {
       name: `${clientName} — Not Signed`,
       mimeType: 'application/vnd.google-apps.folder',
       parents: TEMPLATE_FOLDER_ID ? [TEMPLATE_FOLDER_ID] : undefined,
-      appProperties: { [IDEMPOTENCY_PROP_KEY]: inviteeId },
+      appProperties: {
+        [IDEMPOTENCY_PROP_KEY]: inviteeId,
+        [CLIENT_EMAIL_PROP_KEY]: clientEmail.toLowerCase().trim(),
+      },
     },
     fields: 'id',
   });
@@ -198,7 +238,13 @@ async function createBookingDocs(
     throw new AlreadyProcessedError(inviteeId);
   }
 
-  const folderId = await createClientFolder(clientName, inviteeId);
+  // Drive-level returning-client guard (fallback when KV is unavailable).
+  const existingByEmail = await findExistingFolderByEmail(clientEmail);
+  if (existingByEmail) {
+    throw new AlreadyProcessedError(`returning client (email: ${clientEmail})`);
+  }
+
+  const folderId = await createClientFolder(clientName, clientEmail, inviteeId);
   console.log(`Created client folder: ${clientName} — Not Signed (${folderId})`);
 
   const docTypes: Array<{
@@ -486,6 +532,14 @@ async function claimProcessing(inviteeId: string): Promise<boolean> {
 async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<void> {
   try {
     const inviteeId = getInviteeId(webhookPayload.payload.uri);
+
+    // Fast-path: check by email before doing any API work.
+    const clientEmail = webhookPayload.payload.email || '';
+    if (clientEmail && await isReturningClient(clientEmail)) {
+      console.log(`Returning client — skipping folder/docs/forms email: ${clientEmail}`);
+      return;
+    }
+
     const claimed = await claimProcessing(inviteeId);
     if (!claimed) {
       console.log('Duplicate webhook ignored (already processed):', inviteeId);
@@ -511,6 +565,9 @@ async function processBooking(webhookPayload: CalendlyWebhookPayload): Promise<v
       arbitration: docs.arbitration.docId,
       intake: docs.intake.docId,
     });
+
+    // Mark this client as onboarded so future bookings skip the folder/forms/email.
+    await markClientProcessed(booking.clientEmail);
 
     console.log('Sending confirmation email...');
     await sendBookingConfirmationEmail(booking, docs);
