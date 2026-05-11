@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="footer-col col-span-1 md:col-span-2">
+          <div id="contact" className="footer-col col-span-1 md:col-span-2 scroll-mt-24">
             <h3 className="font-serif text-lg font-semibold text-earth-800 mb-4">Get in Touch</h3>
             <ContactForm />
           </div>

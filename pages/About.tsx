@@ -36,9 +36,6 @@ export const About: React.FC = () => {
             About
           </span>
           <h1 className="about-header-anim font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-earth-800 mb-4 sm:mb-6">The Practitioner</h1>
-          <p className="about-header-anim text-base sm:text-lg md:text-xl text-earth-600 font-light max-w-2xl mx-auto px-4">
-            Ian Turley L.Ac — Licensed Acupuncturist
-          </p>
         </div>
 
         {/* Bio Section */}
@@ -56,7 +53,7 @@ export const About: React.FC = () => {
             </div>
             
             <div ref={bioTextRef} className="md:col-span-7 space-y-4 sm:space-y-6">
-                <h2 className="bio-anim font-serif text-2xl sm:text-3xl font-bold text-earth-800">Ian Turley L.Ac</h2>
+                <h2 className="bio-anim font-serif text-2xl sm:text-3xl font-bold text-earth-800">Ian Turley L.Ac.</h2>
                 <h3 className="bio-anim text-autumn-700 font-medium tracking-wide uppercase text-xs sm:text-sm">Licensed Acupuncturist</h3>
                 
                 <div className="bio-anim text-earth-600 space-y-3 sm:space-y-4 leading-relaxed text-sm sm:text-base border-l-2 border-autumn-200/70 pl-5 sm:pl-6">
@@ -70,7 +67,7 @@ export const About: React.FC = () => {
                         While earning my BA in Psychology, I noticed that pain, stress, and injury often stood in the way of emotional and psychological healing. As a massage therapist, I further explored the link between physical and emotional health and observed that mobility and freedom are closely intertwined. It was this insight that gave birth to the name of my practice, BreakThrough.
                     </p>
                     <p>
-                        My life outside the clinic revolves around music, food and nature. I've played sports most of my life and have spent the last 4 years focussing on the study of Chinese martial arts (Xingyi and Baguazhang). The pursuit of martial arts, in particular, has helped me to understand hard-to-grasp concepts like Qi ("energy") and Shen ("mind") by grounding them in physical practices. Making the conceptual tangible is essential to providing digestible, down-to-earth medicine and I'm grateful to have the opportunity to work with every patient who walks in my door.
+                        My life outside the clinic revolves around music, food and nature. I've played sports most of my life and have spent the last 5 years focusing on the study of Chinese martial arts (Xingyi and Baguazhang). The pursuit of martial arts, in particular, has helped me to understand hard-to-grasp concepts like Qi ("energy") and Shen ("mind") by grounding them in physical practices. Making the conceptual tangible is essential to providing digestible, down-to-earth medicine and I'm grateful to be practicing this time-honored medicine and I look forward to working with you.
                     </p>
                 </div>
 

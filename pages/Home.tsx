@@ -141,10 +141,10 @@ export const Home: React.FC = () => {
                 Treatments are active, meaning that my time is spent observing, adjusting, palpating, listening, and responding as the treatment unfolds. This may involve acupuncture or dry needling, moxibustion, cupping, bodywork, herbal medicine, or, at times, focused discussion and clinical guidance. The modalities used are determined by a patient's needs, not a preset routine.
               </p>
               <p className="approach-anim text-earth-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-                Herbal prescriptions are written as custom formulas, tailored to the individual and revised as their condition changes.
+                Herbal prescriptions are written as custom formulas, tailored to the individual and are revised as conditions change. While patent formulas can serve as a good starting point, they rarely capture the fullness of the situation/novelty that is you.
               </p>
               <p className="approach-anim text-earth-600 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
-                My practice is not structured around selling products or generating revenue through unnecessary testing. Instead, it is grounded in the traditional diagnostic frameworks of Chinese medicine—understanding how illness arises, how it evolves, and how to intervene precisely and appropriately. The goal is not temporary relief, but clear, noticeable change that holds over time.
+                My practice is not structured around selling products or generating revenue through unnecessary testing. Instead, it is grounded in the traditional diagnostic frameworks of Chinese medicine. Breaking through old patterns demands returning to basics — understanding how illness arises, how it evolves, and how to intervene precisely and appropriately is my foundation. The goal is not temporary relief, but clear, noticeable change that holds over time.
               </p>
               
               <div className="approach-anim grid grid-cols-1 gap-6 mb-8">

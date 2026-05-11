@@ -1,16 +1,34 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { NAV_ITEMS } from '../constants';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Flower2 } from 'lucide-react';
 import gsap from 'gsap';
 
+const scrollToHash = (hash: string) => {
+  const id = hash.replace(/^#/, '');
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
   const navItemsRef = useRef<HTMLDivElement>(null);
+
+  const handleHashClick = (e: React.MouseEvent, hash: string) => {
+    e.preventDefault();
+    setIsOpen(false);
+    if (location.pathname !== '/') {
+      navigate('/' + hash);
+      setTimeout(() => scrollToHash(hash), 80);
+    } else {
+      scrollToHash(hash);
+    }
+  };
 
   useLayoutEffect(() => {
     if (!navItemsRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -60,23 +78,44 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Nav */}
           <div ref={navItemsRef} className="hidden md:flex items-center space-x-8">
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `nav-link-anim text-sm font-medium tracking-wider transition-colors ${
-                    isHomePage
-                      ? scrolled 
-                        ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`
-                        : `text-white hover:text-autumn-200 ${isActive ? 'font-semibold' : ''}`
-                      : `hover:text-autumn-700 ${isActive ? 'text-autumn-600 font-semibold' : 'text-autumn-600'}`
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const baseClass = `nav-link-anim text-sm font-medium tracking-wider transition-colors ${
+                isHomePage
+                  ? scrolled
+                    ? 'hover:text-autumn-600 text-earth-600'
+                    : 'text-white hover:text-autumn-200'
+                  : 'hover:text-autumn-700 text-autumn-600'
+              }`;
+              if (item.path.startsWith('#')) {
+                return (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    onClick={(e) => handleHashClick(e, item.path)}
+                    className={baseClass}
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `nav-link-anim text-sm font-medium tracking-wider transition-colors ${
+                      isHomePage
+                        ? scrolled
+                          ? `hover:text-autumn-600 ${isActive ? 'text-autumn-700 font-semibold' : 'text-earth-600'}`
+                          : `text-white hover:text-autumn-200 ${isActive ? 'font-semibold' : ''}`
+                        : `hover:text-autumn-700 ${isActive ? 'text-autumn-600 font-semibold' : 'text-autumn-600'}`
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              );
+            })}
           </div>
 
           {/* Mobile Menu Button */}
@@ -102,19 +141,33 @@ export const Navbar: React.FC = () => {
         }`}
       >
         <div className="px-4 py-6 space-y-4 flex flex-col items-center">
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `text-lg font-medium transition-colors ${
-                  isActive ? 'text-autumn-700' : 'text-earth-600'
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            if (item.path.startsWith('#')) {
+              return (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  onClick={(e) => handleHashClick(e, item.path)}
+                  className="text-lg font-medium transition-colors text-earth-600"
+                >
+                  {item.label}
+                </a>
+              );
+            }
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `text-lg font-medium transition-colors ${
+                    isActive ? 'text-autumn-700' : 'text-earth-600'
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            );
+          })}
         </div>
       </div>
     </nav>
