@@ -67,7 +67,7 @@ export const About: React.FC = () => {
                         While earning my BA in Psychology, I noticed that pain, stress, and injury often stood in the way of emotional and psychological healing. As a massage therapist, I further explored the link between physical and emotional health and observed that mobility and freedom are closely intertwined. It was this insight that gave birth to the name of my practice, BreakThrough.
                     </p>
                     <p>
-                        My life outside the clinic revolves around music, food and nature. I've played sports most of my life and have spent the last 5 years focusing on the study of Chinese martial arts (Xingyi and Baguazhang). The pursuit of martial arts, in particular, has helped me to understand hard-to-grasp concepts like Qi ("energy") and Shen ("mind") by grounding them in physical practices. Making the conceptual tangible is essential to providing digestible, down-to-earth medicine and I'm grateful to be practicing this time-honored medicine and I look forward to working with you.
+                        My life outside the clinic revolves around music, food and nature. I've played sports most of my life and have spent the last 5 years focusing on the study of Chinese martial arts (Xingyi and Baguazhang). The pursuit of martial arts, in particular, has helped me to understand hard-to-grasp concepts like Qi ("energy") and Shen ("mind") by grounding them in physical practices. Making the conceptual tangible has been an essential part of how I practice and share the medicine with my patients – I look forward to working with each and every one of you
                     </p>
                 </div>
 
