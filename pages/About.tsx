@@ -46,7 +46,7 @@ export const About: React.FC = () => {
                     <img 
                         src="/images/headshot.jpg" 
                         alt="Ian Turley L.Ac - Licensed Acupuncturist" 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                     />
                 </div>
                 <div className="absolute -bottom-8 -right-8 bg-autumn-100 p-8 rounded-full hidden lg:block z-[-1] w-48 h-48"></div>
