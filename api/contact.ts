@@ -3,8 +3,17 @@ import * as Brevo from '@getbrevo/brevo';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const FROM_EMAIL = process.env.BREVO_FROM_EMAIL || '';
-const FROM_NAME = process.env.BREVO_FROM_NAME || 'BreakThrough Therapy';
-const TO_EMAIL = process.env.YOUR_GOOGLE_EMAIL || FROM_EMAIL;
+const FROM_NAME = process.env.BREVO_FROM_NAME || 'Ian at BreakThrough';
+const TO_EMAIL = process.env.CONTACT_TO_EMAIL || process.env.YOUR_GOOGLE_EMAIL || FROM_EMAIL;
+
+const HTML_ESCAPES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+const esc = (s: string) => s.replace(/[&<>"']/g, (c) => HTML_ESCAPES[c] || c);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
@@ -30,8 +39,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const apiInstance = new Brevo.TransactionalEmailsApi();
     apiInstance.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, BREVO_API_KEY);
 
+    const safeName = esc(name);
+    const safeEmail = esc(email);
+    const safeMessage = esc(message);
+
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = `New Contact Form Message from ${name}`;
+    sendSmtpEmail.subject = `Contact: ${name}`;
     sendSmtpEmail.htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -51,9 +64,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <tr>
             <td style="padding:32px 40px;">
               <p style="color:#6b5c4d; font-size:14px; margin:0 0 4px 0; text-transform:uppercase; letter-spacing:1px; font-weight:bold;">From</p>
-              <p style="color:#4a3728; font-size:16px; margin:0 0 24px 0;">${name} &lt;${email}&gt;</p>
+              <p style="color:#4a3728; font-size:16px; margin:0 0 24px 0;">${safeName} &lt;${safeEmail}&gt;</p>
               <p style="color:#6b5c4d; font-size:14px; margin:0 0 4px 0; text-transform:uppercase; letter-spacing:1px; font-weight:bold;">Message</p>
-              <p style="color:#4a3728; font-size:16px; line-height:1.6; margin:0; white-space:pre-wrap;">${message}</p>
+              <p style="color:#4a3728; font-size:16px; line-height:1.6; margin:0; white-space:pre-wrap;">${safeMessage}</p>
             </td>
           </tr>
         </table>
@@ -64,7 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 </html>`.trim();
     sendSmtpEmail.textContent = `New Contact Form Message\n\nFrom: ${name} <${email}>\n\nMessage:\n${message}`;
     sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: TO_EMAIL, name: FROM_NAME }];
+    sendSmtpEmail.to = [{ email: TO_EMAIL, name: 'BreakThrough Inbox' }];
     sendSmtpEmail.replyTo = { email, name };
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);

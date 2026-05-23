@@ -4,12 +4,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "vite",
-  "functions": {
-    "api/calendly-webhook.ts": {
-      "maxDuration": 30,
-      "includeFiles": "lib/**"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -43,10 +37,9 @@
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Calendly-Webhook-Signature"
+          "value": "Content-Type"
         }
       ]
     }
   ]
 }
-

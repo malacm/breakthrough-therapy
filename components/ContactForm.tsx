@@ -60,7 +60,7 @@ export const ContactForm: React.FC = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full px-3 py-2 rounded-lg border border-earth-200 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors"
+          className="w-full px-3 py-2 rounded-lg border border-earth-300 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors"
         />
       </div>
       <div>
@@ -70,7 +70,7 @@ export const ContactForm: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-3 py-2 rounded-lg border border-earth-200 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors"
+          className="w-full px-3 py-2 rounded-lg border border-earth-300 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors"
         />
       </div>
       <div>
@@ -80,7 +80,7 @@ export const ContactForm: React.FC = () => {
           onChange={(e) => setMessage(e.target.value)}
           required
           rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-earth-200 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors resize-none"
+          className="w-full px-3 py-2 rounded-lg border border-earth-300 bg-white text-earth-800 text-sm placeholder:text-earth-400 focus:outline-none focus:ring-2 focus:ring-autumn-300 focus:border-autumn-400 transition-colors resize-none"
         />
       </div>
       {status === 'error' && (

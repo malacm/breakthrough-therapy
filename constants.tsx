@@ -8,14 +8,12 @@ import {
 
 import React from 'react';
 
-// Activity/pulse icon (not available in Heroicons)
 const ActivityIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l3-9 4 18 3-9h4" />
   </svg>
 );
 
-// Icon map for dynamic lookup by service icon string
 export const SERVICE_ICON_MAP: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   Heart: HeartIcon,
   Activity: ActivityIcon,
@@ -23,6 +21,10 @@ export const SERVICE_ICON_MAP: Record<string, React.FC<React.SVGProps<SVGSVGElem
   Sparkles: SparklesIcon,
   Phone: PhoneIcon,
 };
+
+export const UNIFIED_PRACTICE_URL = 'https://patient.unifiedpractice.com/breakthrough';
+export const PHONE_DISPLAY = '(310) 430-0478';
+export const PHONE_TEL = '+13104300478';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
@@ -37,49 +39,60 @@ export const SERVICES: Service[] = [
     title: 'First Visit',
     description: 'This is the recommended first step to beginning your journey with BreakThrough. We\'ll spend 40-60 minutes doing a full patient intake and medical history to establish your health goals, current needs and any sensitivities or medication interactions that could interfere with providing you optimal care. We\'ll spend the remaining 40-60 minutes on a treatment that is carefully crafted for your needs on that day.',
     icon: 'Heart',
-    price: '100 minutes — $150',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/first-visit-100-minutes-150'
+    duration: '100 minutes',
+    officePrice: 150,
+    mobilePrice: 250,
+    bookableOnline: true,
   },
   {
     id: '2',
-    title: 'Follow-Up Acupuncture',
+    title: 'Acupuncture',
     description: 'For patients who have already had their First Visit appointment — 10-15 minutes will be spent checking in and reassessing your needs, the remaining 45-50 minutes will be spent receiving acupuncture.',
     icon: 'Activity',
-    price: '60 minutes — $160',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/follow-up-acupuncture-60-minutes-160'
+    duration: '60 minutes',
+    officePrice: 110,
+    mobilePrice: 250,
+    bookableOnline: true,
   },
   {
     id: '3',
-    title: 'Chinese Medical Massage',
-    description: '60 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
-    icon: 'Hand',
-    price: '60 minutes — $250',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/chinese-medical-massage-60-minutes-250'
+    title: 'Acupuncture & Massage',
+    description: 'For patients who have had their First Visit — 40 minutes of acupuncture followed or preceded by 20 minutes of bodywork using manual techniques and tools.',
+    icon: 'Sparkles',
+    duration: '60 minutes',
+    officePrice: 175,
+    mobilePrice: 300,
+    bookableOnline: true,
   },
   {
     id: '4',
     title: 'Chinese Medical Massage',
-    description: '90 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
+    description: '60 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
     icon: 'Hand',
-    price: '90 minutes — $350',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/chinese-medical-massage-90-minutes-350'
+    duration: '60 minutes',
+    officePrice: 200,
+    mobilePrice: 350,
+    bookableOnline: true,
   },
   {
     id: '5',
-    title: 'Acupuncture & Massage',
-    description: 'For patients who have had their First Visit — 40 minutes of acupuncture followed or preceded by 20 minutes of bodywork using manual techniques and tools.',
-    icon: 'Sparkles',
-    price: '60 minutes — $220',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/acupuncture-massage-60-minutes-220'
+    title: 'Chinese Medical Massage',
+    description: '90 minutes of hands-on bodywork using hands, knuckles, forearms, elbows, and tools (gua sha, cups, IASTM, moxa).',
+    icon: 'Hand',
+    duration: '90 minutes',
+    officePrice: 300,
+    mobilePrice: 450,
+    bookableOnline: true,
   },
   {
     id: '6',
     title: 'Telehealth',
     description: 'A 30 minute phone or zoom call designed to provide you with nutrition and lifestyle advice catered either to an acute health challenge (like a cold, flu, infection, fungus, etc.) or a chronic health condition (like diabetes, arthritis, IBS, eczema and many others). The information gathered on this call will be used for future treatments and combined with a First Visit intake will serve as the basis for writing your custom herbal formula.',
     icon: 'Phone',
-    price: '30 minutes — $50',
-    calendlyUrl: 'https://calendly.com/breakthroughtherapyacu/telehealth-30-minutes-50'
-  }
+    duration: '30 minutes',
+    telehealthPrice: 50,
+    bookableOnline: true,
+  },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [

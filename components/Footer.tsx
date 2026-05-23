@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { MapPinIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import { Flower2 } from 'lucide-react';
 import { ContactForm } from './ContactForm';
+import { PHONE_DISPLAY, PHONE_TEL } from '../constants';
 import { useStaggerReveal } from '../lib/useGsap';
 
 const InstagramIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -32,7 +33,7 @@ export const Footer: React.FC = () => {
     <footer className="bg-earth-100 pt-16 pb-8 border-t border-earth-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={columnsRef} className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          
+
           {/* Brand */}
           <div className="footer-col col-span-1 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
@@ -42,9 +43,19 @@ export const Footer: React.FC = () => {
             <p className="text-earth-600 text-sm leading-relaxed mb-4">
               Chinese Medicine and Bodywork. A practice rooted in depth, attention, and clinical impact.
             </p>
-            <div className="flex items-start gap-3 text-earth-600 text-sm mb-6">
+            <div className="flex items-start gap-3 text-earth-600 text-sm mb-3">
               <MapPinIcon className="h-5 w-5 text-autumn-600 shrink-0" />
-              <span>Mobile Services Only — Los Angeles Area</span>
+              <span>Office &amp; Mobile Services — Los Angeles Area</span>
+            </div>
+            <div className="flex items-center gap-3 text-earth-600 text-sm mb-6">
+              <PhoneIcon className="h-5 w-5 text-autumn-600 shrink-0" />
+              <a
+                href={`tel:${PHONE_TEL}`}
+                className="hover:text-autumn-700 transition-colors"
+                aria-label={`Call BreakThrough at ${PHONE_DISPLAY}`}
+              >
+                {PHONE_DISPLAY}
+              </a>
             </div>
             <div className="flex space-x-4">
               <a href="#" className="text-earth-400 hover:text-autumn-600 transition-colors"><InstagramIcon className="h-5 w-5" /></a>
@@ -62,9 +73,18 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Contact Form */}
-          <div id="contact" className="footer-col col-span-1 md:col-span-2 scroll-mt-24">
-            <h3 className="font-serif text-lg font-semibold text-earth-800 mb-4">Get in Touch</h3>
+          {/* Contact Form — intentionally NOT in the staggered reveal (no .footer-col class) */}
+          <div id="contact" className="col-span-1 md:col-span-2 scroll-mt-24">
+            <h3 className="font-serif text-lg font-semibold text-earth-800 mb-2">Get in Touch</h3>
+            <p className="text-earth-600 text-sm mb-4">
+              Prefer to call?{' '}
+              <a
+                href={`tel:${PHONE_TEL}`}
+                className="text-autumn-700 font-medium hover:text-autumn-800 underline underline-offset-2"
+              >
+                {PHONE_DISPLAY}
+              </a>
+            </p>
             <ContactForm />
           </div>
 
