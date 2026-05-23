@@ -4,7 +4,6 @@ import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import { Flower2 } from 'lucide-react';
 import { ContactForm } from './ContactForm';
 import { PHONE_DISPLAY, PHONE_TEL } from '../constants';
-import { useStaggerReveal } from '../lib/useGsap';
 
 const InstagramIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} {...props}>
@@ -21,21 +20,13 @@ const FacebookIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const Footer: React.FC = () => {
-  const columnsRef = useStaggerReveal<HTMLDivElement>({
-    childSelector: '.footer-col',
-    y: 30,
-    stagger: 0.1,
-    start: 'top 90%',
-    skipBelowWidth: 768,
-  });
-
   return (
     <footer className="bg-earth-100 pt-16 pb-8 border-t border-earth-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={columnsRef} className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
 
           {/* Brand */}
-          <div className="footer-col col-span-1 md:col-span-1">
+          <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <Flower2 className="h-6 w-6 shrink-0 min-w-[1.5rem] text-autumn-700" />
               <span className="font-serif text-xl font-bold text-earth-800">BreakThrough</span>
@@ -64,7 +55,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="footer-col">
+          <div>
             <h3 className="font-serif text-lg font-semibold text-earth-800 mb-4">Explore</h3>
             <ul className="space-y-3">
               <li><NavLink to="/" className="text-earth-600 hover:text-autumn-700 text-sm">Home</NavLink></li>
@@ -73,7 +64,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Contact Form — intentionally NOT in the staggered reveal (no .footer-col class) */}
+          {/* Contact Form */}
           <div id="contact" className="col-span-1 md:col-span-2 scroll-mt-24">
             <h3 className="font-serif text-lg font-semibold text-earth-800 mb-2">Get in Touch</h3>
             <p className="text-earth-600 text-sm mb-4">
